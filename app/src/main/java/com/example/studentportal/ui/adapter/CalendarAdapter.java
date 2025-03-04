@@ -1,4 +1,4 @@
-package com.example.studentportal;
+package com.example.studentportal.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.studentportal.R;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,7 @@ class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
-        // Высота ячейки (например, 40dp)
+        // Высота ячейки (например, 10dp)
         int cellHeight = (int) (10 * parent.getContext().getResources().getDisplayMetrics().density);
 
         // Рассчитываем количество строк

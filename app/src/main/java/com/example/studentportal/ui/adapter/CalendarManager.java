@@ -1,4 +1,4 @@
-package com.example.studentportal;
+package com.example.studentportal.ui.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.studentportal.CalendarAdapter;
+import com.example.studentportal.ui.adapter.CalendarAdapter;
 
 import java.time.LocalDate;
 import java.time.YearMonth;

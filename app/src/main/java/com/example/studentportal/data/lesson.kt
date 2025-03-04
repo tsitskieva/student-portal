@@ -1,4 +1,4 @@
-package com.example.studentportal
+package com.example.studentportal.data
 
 class lesson(
     val type: String,       // тип пары

@@ -7,7 +7,9 @@ import androidx.activity.ComponentActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.studentportal.ui.theme.lessonsAdapter
+import com.example.studentportal.data.lesson
+import com.example.studentportal.ui.adapter.CalendarManager
+import com.example.studentportal.ui.adapter.lessonsAdapter
 
 
 class MainActivity : ComponentActivity() {

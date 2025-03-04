@@ -1,4 +1,4 @@
-package com.example.studentportal.ui.theme
+package com.example.studentportal.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
-import com.example.studentportal.lesson
+import com.example.studentportal.data.lesson
 
 class lessonsAdapter(var lessons: List<lesson>, var context: Context): RecyclerView.Adapter<lessonsAdapter.MyViewHolder>() {
 
