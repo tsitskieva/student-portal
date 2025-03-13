@@ -16,11 +16,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:fontFamily="@font/lato_bold"
             android:text="Расписание"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +114,6 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="25dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -222,307 +221,526 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
-            android:id="@+id/month_Layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            android:layout_marginTop="23dp"
-            android:layout_marginHorizontal="16dp">
-
             <LinearLayout
-                android:id="@+id/linearLayout2"
+                android:id="@+id/weekDaysContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:onClick="previousMonthAction"
-                    android:src="@drawable/ic_back" />
-
-                <TextView
-                    android:id="@+id/monthYearTV"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/raleway"
-                    android:text="Feb 2021"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="14sp" />
-
-                <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:onClick="nextMonthAction"
-                    android:src="@drawable/ic_next" />
-
-            </LinearLayout>
-
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:fillViewport="true"
-                android:paddingHorizontal="16dp"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintEnd_toEndOf="parent">
 
+                <!-- День 1 -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Январь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
+                        android:text="1"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
 
-                    <TextView
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Февраль"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Март"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Апрель"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Май"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Июнь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Июль"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Август"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Сентябрь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Октябрь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="25dp"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Ноябрь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:text="Декабрь"
-                        android:textAlignment="center"
-                        android:textColor="#777883"
-                        android:textSize="14sp" />
-
-
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
                 </LinearLayout>
 
-            </HorizontalScrollView>
-
-            <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="14dp"
-                android:background="#222428"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
-
-            <LinearLayout
-                android:id="@+id/week_days"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/line">
-
-                <TextView
+                <!-- День 2 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="пн"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
+
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <!-- День 3 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="вт"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
+
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <!-- День 4 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="ср"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
+
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <!-- День 5 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="чт"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
+
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <!-- День 6 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="пт"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
+
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+                <!-- День 7 -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="сб"
-                    android:textAlignment="center"
-                    android:textColor="#B8B7B7"
-                    android:textSize="12sp" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/raleway"
-                    android:text="вс"
-                    android:textAlignment="center"
-                    android:textColor="#777883"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:padding="7dp"
+                        android:id="@+id/day7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="7"
+                        android:textColor="#B8B7B7"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/raleway"/>
 
+                    <!-- Контейнер для точек -->
+                    <LinearLayout
+                        android:id="@+id/dotsContainer7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/calendarRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="143dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:visibility="gone"-->
+<!--            android:id="@+id/month_Layout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/textView"-->
+<!--            android:layout_marginTop="23dp"-->
+<!--            android:layout_marginHorizontal="16dp">-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/linearLayout2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:paddingHorizontal="16dp">-->
+
+<!--                <ImageButton-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@null"-->
+<!--                    android:onClick="previousMonthAction"-->
+<!--                    android:src="@drawable/ic_back" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/monthYearTV"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="2"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="Feb 2021"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="14sp" />-->
+
+<!--                <ImageButton-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@null"-->
+<!--                    android:onClick="nextMonthAction"-->
+<!--                    android:src="@drawable/ic_next" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <HorizontalScrollView-->
+<!--                android:id="@+id/horizontalScrollView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="35dp"-->
+<!--                android:fillViewport="true"-->
+<!--                android:paddingHorizontal="16dp"-->
+<!--                android:scrollbars="none"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Январь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Февраль"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Март"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Апрель"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Май"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Июнь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Июль"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Август"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Сентябрь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Октябрь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginEnd="25dp"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Ноябрь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/raleway_medium"-->
+<!--                        android:text="Декабрь"-->
+<!--                        android:textAlignment="center"-->
+<!--                        android:textColor="#777883"-->
+<!--                        android:textSize="14sp" />-->
+
+
+<!--                </LinearLayout>-->
+
+<!--            </HorizontalScrollView>-->
+
+<!--            <View-->
+<!--                android:id="@+id/line"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginTop="14dp"-->
+<!--                android:background="#222428"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/week_days"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:orientation="horizontal"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/line">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="пн"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="вт"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="ср"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="чт"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="пт"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="сб"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#B8B7B7"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:fontFamily="@font/raleway"-->
+<!--                    android:text="вс"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="#777883"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/calendarRecyclerView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="143dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/linearLayout2" />-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lessons_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="30dp"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/week_Layout" />
+            app:layout_constraintTop_toBottomOf="@+id/week_Layout"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

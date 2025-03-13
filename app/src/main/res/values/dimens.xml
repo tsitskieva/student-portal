@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Размер точки -->
+    <dimen name="dot_size">3dp</dimen>
+    <!-- Отступ между точками -->
+    <dimen name="dot_margin">1dp</dimen>
+</resources>
