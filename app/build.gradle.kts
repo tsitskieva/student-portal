@@ -44,6 +44,9 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation(platform("androidx.compose:compose-bom:2025.03.00"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -58,8 +58,6 @@ class MainActivity : ComponentActivity() {
         // Обновляем точки под днями
         updateDotsUnderDays()
 
-
-
         // Обработка нажатий на кнопки "назад" и "вперед"
         findViewById<ImageView>(R.id.buttonBack).setOnClickListener {
             weekManager?.previousWeek()
