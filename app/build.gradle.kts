@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
+    alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -8,13 +10,14 @@ android {
     namespace = "com.example.studentportal"
     compileSdk = 35
 
-    viewBinding{
+    viewBinding {
         enable = true
     }
 
     defaultConfig {
         applicationId = "com.example.studentportal"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -44,6 +47,21 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    ksp(libs.moshi.ksp)
+    implementation(libs.moshi)
+    implementation(libs.okhttp.logging)
+    implementation(libs.coroutines.android)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.cardview)
+
+    implementation(libs.flexbox)
+    implementation(libs.material.v1110)
+    implementation(platform(libs.androidx.compose.bom.v20250300))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

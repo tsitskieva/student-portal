@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="6dp"
+    app:cardBackgroundColor="#1F222B"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Основной контент с полоской -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="20dp">
+
+            <!-- Название и баллы -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="14dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/lato"
+                    android:lineSpacingExtra="4sp"
+                    android:maxLines="2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Баллы -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCurrentScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_bold"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway"
+                        android:paddingHorizontal="4sp"
+                        android:text="@string/hyphen"
+                        android:textColor="#777883"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvMaxScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway"
+                        android:textColor="#777883"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Акцентная полоска -->
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/bg_accent_stripe" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Прогресс-бар -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_progress_track"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <View
+                android:id="@+id/progressIndicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@drawable/bg_progress_fill" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

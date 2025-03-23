@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- Фон только для иконки -->
+            <item android:gravity="center_horizontal|top" android:top="4dp">
+                <shape android:shape="rectangle">
+                    <size android:width="58dp" android:height="32dp" />
+                    <solid android:color="#483D75" />
+                    <corners android:radius="16dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

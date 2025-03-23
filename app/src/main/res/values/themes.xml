@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Studentportal" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Studentportal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </style>
+
+    <style name="NavTextAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/raleway_medium</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+    <style name="CustomBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 </resources>

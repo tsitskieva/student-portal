@@ -4,4 +4,6 @@
     <dimen name="dot_size">3dp</dimen>
     <!-- Отступ между точками -->
     <dimen name="dot_margin">1dp</dimen>
+
+    <dimen name="nav_icon_size">48dp</dimen>
 </resources>

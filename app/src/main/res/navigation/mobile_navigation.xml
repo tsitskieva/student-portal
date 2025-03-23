@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_schedule">
+
+    <fragment
+        android:id="@+id/nav_schedule"
+        android:name="com.example.studentportal.ui.schedule.ScheduleFragment"
+        android:label="Пары"
+        tools:layout="@layout/fragment_schedule">
+        <action
+            android:id="@+id/action_scheduleFragment_to_lessonFragment"
+            app:destination="@id/lessonFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/lessonFragment"
+        android:name="com.example.studentportal.ui.schedule.lesson.LessonFragment"
+        android:label="LessonFragment"
+        tools:layout="@layout/fragment_lesson">
+
+        <argument
+            android:name="lessonId"
+            app:argType="string"/>
+        <argument
+            android:name="lessonTitle"
+            app:argType="string"/>
+        <argument
+            android:name="lessonTypeOfTest"
+            app:argType="string"/>
+        <argument
+            android:name="lessonType"
+            app:argType="string"/>
+        <argument
+            android:name="lessonAudience"
+            app:argType="string"/>
+        <argument
+            android:name="lessonBuilding"
+            app:argType="string"/>
+        <argument
+            android:name="lessonTeacher"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_news"
+        android:name="com.example.studentportal.ui.news.NewsFragment"
+        android:label="Новости"
+        tools:layout="@layout/fragment_news">
+        <action
+            android:id="@+id/action_news_to_details"
+            app:destination="@id/newsDescFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newsDescFragment"
+        android:name="com.example.studentportal.ui.news.desc.NewsDescFragment"
+        android:label="Детали новости"
+        tools:layout="@layout/news_description">
+        <action
+            android:id="@+id/action_newsDescFragment_self"
+            app:destination="@id/newsDescFragment">
+            <argument
+                android:name="newsTitle"
+                app:argType="string" />
+            <argument
+                android:name="newsDate"
+                app:argType="string" />
+            <argument
+                android:name="newsAuthor"
+                app:argType="string" />
+            <argument
+                android:name="newsMainPhoto"
+                app:argType="integer" />
+            <argument
+                android:name="newsDescriptionPart1"
+                app:argType="string" />
+            <argument
+                android:name="newsDescriptionPart2"
+                app:argType="string" />
+            <argument
+                android:name="newsCategories"
+                app:argType="string[]" />
+            <argument
+                android:name="newsGalleryImages"
+                app:argType="string[]" />
+        </action>
+
+        <argument
+            android:name="newsTitle"
+            app:argType="string" />
+        <argument
+            android:name="newsDate"
+            app:argType="string" />
+        <argument
+            android:name="newsAuthor"
+            app:argType="string" />
+        <argument
+            android:name="newsMainPhoto"
+            app:argType="integer" />
+        <argument
+            android:name="newsDescriptionPart1"
+            app:argType="string" />
+        <argument
+            android:name="newsDescriptionPart2"
+            app:argType="string" />
+        <argument
+            android:name="newsCategories"
+            app:argType="string[]" />
+        <argument
+            android:name="newsGalleryImages"
+            app:argType="string[]" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.studentportal.ui.profile.ProfileFragment"
+        android:label="Профиль"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_brs"
+        android:name="com.example.studentportal.ui.brs.BRSFragment"
+        android:label="БРС"
+        tools:layout="@layout/fragment_brs">
+
+        <action
+            android:id="@+id/action_brs_to_detail"
+            app:destination="@id/disciplineDetailFragment">
+            <argument
+                android:name="disciplineId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/disciplineDetailFragment"
+        android:name="com.example.studentportal.ui.brs.discipline.DisciplineDetailFragment"
+        android:label="Детали"
+        tools:layout="@layout/fragment_discipline_detail">
+        <argument
+            android:name="disciplineId"
+            app:argType="integer" />
+    </fragment>
+
+
+</navigation>
