@@ -26,11 +26,6 @@ class SelectedGroupsAdapter(
             offButton.setOnClickListener {
                 onItemClick(groups[adapterPosition])
             }
-
-            // Для остальной области элемента - обработчик удаления (если нужно)
-            itemView.setOnClickListener {
-                // Можно добавить другую логику или оставить пустым
-            }
         }
     }
 
@@ -60,22 +55,6 @@ class SelectedGroupsAdapter(
     }
 
     override fun getItemCount() = groups.size
-
-    fun getGroupAtPosition(position: Int): group? {
-        return if (position in groups.indices) groups[position] else null
-    }
-
-    fun removeGroup(groupToRemove: group) {
-        val newList = groups.toMutableList().apply {
-            remove(groupToRemove)
-            if (groupToRemove.isActive && isNotEmpty()) {
-                first().isActive = true
-            }
-        }
-        groups = newList
-        notifyDataSetChanged()
-        onDeleteClick(groupToRemove)
-    }
 
     fun updateList(newList: List<group>) {
         groups = newList.sortedByDescending { it.isActive }

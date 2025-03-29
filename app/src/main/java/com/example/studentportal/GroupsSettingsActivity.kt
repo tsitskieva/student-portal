@@ -10,7 +10,6 @@ import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.registerForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -54,10 +53,6 @@ class GroupsSettingsActivity : ComponentActivity() {
         )
 
         selectedGroupsRecyclerView.adapter = selectedGroupsAdapter
-
-        // Настройка свайпа для удаления
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(selectedGroupsAdapter, this))
-        itemTouchHelper.attachToRecyclerView(selectedGroupsRecyclerView)
 
         // Настройка кнопки "Назад"
         val backButton = findViewById<ImageView>(R.id.back_to_all_settings)
