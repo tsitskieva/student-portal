@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#16181C">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/poisklayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/back_to_group_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato_bold"
+                    android:text="Добавить код БРС"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/addBrs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="@font/raleway"
+                android:text="Введите название*"
+                android:textColor="#777883"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/poisklayout" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/input_container_name_of_brs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/input_container_background"
+                android:paddingStart="15dp"
+                android:paddingTop="17dp"
+                android:paddingBottom="17dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addBrs"
+                android:layout_marginHorizontal="16dp">
+
+                <EditText
+                    android:id="@+id/name_of_brs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="Ввод..."
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#777883"
+                    android:fontFamily="@font/raleway"
+                    android:textSize="16sp"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/addCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Введите код БРС*"
+                android:textColor="#777883"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/input_container_name_of_brs"
+                android:textSize="15sp"
+                android:fontFamily="@font/raleway"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="25dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/input_container_code_of_brs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/input_container_background"
+                android:paddingStart="15dp"
+                android:paddingTop="17dp"
+                android:paddingBottom="17dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addCode"
+                android:layout_marginHorizontal="16dp">
+
+                <EditText
+                    android:id="@+id/code_of_brs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="Ввод..."
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#777883"
+                    android:fontFamily="@font/raleway"
+                    android:textSize="16sp"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/addComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Введите комментарий"
+                android:textColor="#777883"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/input_container_code_of_brs"
+                android:textSize="15sp"
+                android:fontFamily="@font/raleway"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="25dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/input_container_comment_of_brs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/input_container_background"
+                android:paddingStart="15dp"
+                android:paddingTop="17dp"
+                android:paddingBottom="17dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addComment"
+                android:layout_marginHorizontal="16dp">
+
+                <EditText
+                    android:id="@+id/comment_of_brs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="Ввод..."
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#777883"
+                    android:fontFamily="@font/raleway"
+                    android:textSize="16sp"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

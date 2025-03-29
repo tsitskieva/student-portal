@@ -21,6 +21,7 @@ class GroupsSettingsActivity : ComponentActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         updateGroupsList()
+        setResult(RESULT_OK) // Добавляем эту строку
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
