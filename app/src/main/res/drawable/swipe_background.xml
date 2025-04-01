@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F71D4D"/>
+            <corners
+                android:topRightRadius="10dp"
+                android:bottomRightRadius="10dp"/>
+        </shape>
+    </item>
+    <item
+        android:right="30dp"
+        android:gravity="center_vertical|right">
+        <bitmap
+            android:src="@drawable/ic_delete"
+            android:gravity="center"/>
+    </item>
+</layer-list>

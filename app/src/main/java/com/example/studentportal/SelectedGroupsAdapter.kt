@@ -1,10 +1,15 @@
 package com.example.studentportal
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 class SelectedGroupsAdapter(
@@ -22,7 +27,6 @@ class SelectedGroupsAdapter(
         val inactiveLine: ImageView = itemView.findViewById(R.id.group_list_line_not_active)
 
         init {
-            // Обработчик только для кнопки offButton
             offButton.setOnClickListener {
                 onItemClick(groups[adapterPosition])
             }
@@ -59,5 +63,52 @@ class SelectedGroupsAdapter(
     fun updateList(newList: List<group>) {
         groups = newList.sortedByDescending { it.isActive }
         notifyDataSetChanged()
+    }
+
+    fun setupSwipeToDelete(recyclerView: RecyclerView) {
+        val swipeToDeleteCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT
+        ) {
+            private val background = ColorDrawable(Color.RED)
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val groupToDelete = groups[position]
+                onDeleteClick(groupToDelete)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+
+                // Рисуем красный фон при свайпе
+                background.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+                background.draw(c)
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 }

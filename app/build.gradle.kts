@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    // Добавляем плагин для parcelize, если нужно
     id("kotlin-parcelize")
 }
 
@@ -41,7 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
-        viewBinding = true // Если используете ViewBinding
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
@@ -54,7 +53,6 @@ android {
 }
 
 dependencies {
-    // Основные зависимости Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,20 +61,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // UI компоненты
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
-
-    // Gson для работы с JSON
     implementation("com.google.code.gson:gson:2.10.1")
-
-    // Дополнительные полезные зависимости
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.0")
-
-    // Тестирование
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

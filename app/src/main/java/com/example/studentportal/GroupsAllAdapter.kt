@@ -41,4 +41,6 @@ class GroupsAllAdapter(
         groups = newList
         notifyDataSetChanged()
     }
+
+    fun getGroups() = groups
 }

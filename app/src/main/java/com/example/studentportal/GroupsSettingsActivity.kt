@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
-import androidx.activity.result.registerForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView
 class GroupsSettingsActivity : ComponentActivity() {
     private lateinit var selectedGroupsAdapter: SelectedGroupsAdapter
     private lateinit var selectedGroups: MutableList<group>
+    private lateinit var recyclerView: RecyclerView
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        updateGroupsList()
-        setResult(RESULT_OK) // Добавляем эту строку
+        if (result.resultCode == RESULT_OK) {
+            updateGroupsList()
+            setResult(RESULT_OK)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,32 +32,40 @@ class GroupsSettingsActivity : ComponentActivity() {
 
         selectedGroups = SelectedGroupsManager.getSelectedGroups(this).toMutableList()
 
-        val selectedGroupsRecyclerView = findViewById<RecyclerView>(R.id.list_of_choosen_groups)
-        selectedGroupsRecyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView = findViewById<RecyclerView>(R.id.list_of_choosen_groups)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         selectedGroupsAdapter = SelectedGroupsAdapter(
             selectedGroups,
             onItemClick = { clickedGroup ->
-                // Делаем кликнутую группу активной, остальные - неактивными
                 selectedGroups.forEach { it.isActive = false }
                 clickedGroup.isActive = true
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
                 selectedGroupsAdapter.updateList(selectedGroups)
+                setResult(RESULT_OK)
             },
             onDeleteClick = { groupToDelete ->
-                selectedGroups.remove(groupToDelete)
-                if (groupToDelete.isActive && selectedGroups.isNotEmpty()) {
-                    // Если удалили активную группу, делаем следующую активной
-                    selectedGroups[0].isActive = true
+                // Если удаляем активную группу
+                if (groupToDelete.isActive && selectedGroups.size > 1) {
+                    // Находим следующую группу после удаляемой (или первую, если удаляемая последняя)
+                    val nextActiveIndex = if (selectedGroups.indexOf(groupToDelete) < selectedGroups.size - 1) {
+                        selectedGroups.indexOf(groupToDelete)
+                    } else {
+                        0
+                    }
+                    selectedGroups[nextActiveIndex].isActive = true
                 }
+
+                selectedGroups.remove(groupToDelete)
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
                 selectedGroupsAdapter.updateList(selectedGroups)
+                setResult(RESULT_OK)
             }
         )
 
-        selectedGroupsRecyclerView.adapter = selectedGroupsAdapter
+        recyclerView.adapter = selectedGroupsAdapter
+        selectedGroupsAdapter.setupSwipeToDelete(recyclerView)
 
-        // Настройка кнопки "Назад"
         val backButton = findViewById<ImageView>(R.id.back_to_all_settings)
         val parent = backButton.parent as ViewGroup
 
@@ -71,7 +81,6 @@ class GroupsSettingsActivity : ComponentActivity() {
             finish()
         }
 
-        // Настройка кнопки добавления группы
         val buttonToList = findViewById<Button>(R.id.button_to_list_of_groups)
         buttonToList.setOnClickListener {
             val intent = Intent(this, GroupsAllListActivity::class.java)
