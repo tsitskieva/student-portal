@@ -17,11 +17,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/shedule1"
             android:textColor="#FFFFFF"
-            android:textSize="22sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,7 @@
                         android:fontFamily="@font/raleway"
                         android:text="@string/_2024"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="parent"
@@ -101,7 +101,7 @@
                         android:fontFamily="@font/raleway"
                         android:text="@string/up_week"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -137,7 +137,7 @@
                     android:gravity="center"
                     android:text="пн"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -152,7 +152,7 @@
                     android:gravity="center"
                     android:text="вт"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView4"
                     app:layout_constraintTop_toTopOf="parent"
@@ -167,7 +167,7 @@
                     android:gravity="center"
                     android:text="ср"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView10"
                     app:layout_constraintTop_toTopOf="parent"
@@ -182,7 +182,7 @@
                     android:gravity="center"
                     android:text="чт"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView9"
                     app:layout_constraintTop_toTopOf="parent"
@@ -197,7 +197,7 @@
                     android:gravity="center"
                     android:text="пт"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView8"
                     app:layout_constraintTop_toTopOf="parent"
@@ -212,7 +212,7 @@
                     android:gravity="center"
                     android:text="сб"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView7"
                     app:layout_constraintTop_toTopOf="parent"
@@ -227,7 +227,7 @@
                     android:gravity="center"
                     android:text="вс"
                     android:textColor="#B8B7B7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView6"
@@ -260,14 +260,13 @@
 
                     <TextView
                         android:id="@+id/day1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="1"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -290,14 +289,13 @@
 
                     <TextView
                         android:id="@+id/day2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="2"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -320,14 +318,13 @@
 
                     <TextView
                         android:id="@+id/day3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="3"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -350,14 +347,13 @@
 
                     <TextView
                         android:id="@+id/day4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="4"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -380,14 +376,13 @@
 
                     <TextView
                         android:id="@+id/day5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="5"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -410,14 +405,13 @@
 
                     <TextView
                         android:id="@+id/day6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="6"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->
@@ -440,14 +434,13 @@
 
                     <TextView
                         android:id="@+id/day7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:gravity="center"
-                        android:padding="7dp"
                         android:text="7"
                         android:textColor="#B8B7B7"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/raleway"
                         tools:ignore="HardcodedText" />
 
                     <!-- Контейнер для точек -->

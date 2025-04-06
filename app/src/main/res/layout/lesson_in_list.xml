@@ -48,7 +48,7 @@
                     android:gravity="center"
                     android:text="@string/type"
                     android:textColor="#777883"
-                    android:textSize="13sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -60,7 +60,7 @@
                 android:fontFamily="@font/raleway_medium"
                 android:text="@string/title"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/lesson_list_number"
@@ -70,7 +70,7 @@
                 android:fontFamily="@font/raleway_medium"
                 android:text="@string/number_of_lesson"
                 android:textColor="#8A6EFF"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -97,7 +97,7 @@
                 android:gravity="bottom"
                 android:text="@string/time"
                 android:textColor="#8A6EFF"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -131,7 +131,7 @@
             android:fontFamily="@font/raleway"
             android:text="@string/teacher"
             android:textColor="#777883"
-            android:textSize="13sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -157,7 +157,7 @@
             android:fontFamily="@font/raleway"
             android:text="@string/audience"
             android:textColor="#777883"
-            android:textSize="13sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>

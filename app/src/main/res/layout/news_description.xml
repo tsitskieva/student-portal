@@ -93,7 +93,7 @@
                                 android:fontFamily="@font/raleway"
                                 android:text="@string/data"
                                 android:textColor="#777883"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 tools:ignore="NestedWeights" />
 
                             <TextView
@@ -105,7 +105,7 @@
                                 android:gravity="start"
                                 android:text="@string/date_of_news"
                                 android:textColor="#FFFFFF"
-                                android:textSize="13sp" />
+                                android:textSize="15sp" />
 
                         </LinearLayout>
 
@@ -131,7 +131,7 @@
                                 android:fontFamily="@font/raleway"
                                 android:text="@string/author"
                                 android:textColor="#777883"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 tools:ignore="NestedWeights" />
 
                             <TextView
@@ -143,7 +143,7 @@
                                 android:gravity="start"
                                 android:text="@string/author_of_news"
                                 android:textColor="#FFFFFF"
-                                android:textSize="13sp" />
+                                android:textSize="15sp" />
 
                         </LinearLayout>
 
@@ -166,7 +166,7 @@
                             android:fontFamily="@font/lato"
                             android:text="Какая-то важная новость для студентов университета ЮФУ"
                             android:textColor="#FFFFFF"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             tools:ignore="HardcodedText" />
 
 
@@ -189,7 +189,7 @@
                             android:fontFamily="@font/raleway"
                             android:text="Какая-то важная новость для студентов университета ЮФУ Какая-то важная новость для студентов университета ЮФУ "
                             android:textColor="#B8B7B7"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             tools:ignore="HardcodedText" />
 
                     </LinearLayout>
@@ -275,38 +275,38 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="25dp"-->
+<!--                        android:orientation="vertical"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">-->
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="16dp"
-                            android:fontFamily="@font/lato_bold"
-                            android:text="@string/last_important_news"
-                            android:textColor="#FFFFFF"
-                            android:textSize="22sp" />
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginHorizontal="16dp"-->
+<!--                            android:fontFamily="@font/lato_bold"-->
+<!--                            android:text="@string/last_important_news"-->
+<!--                            android:textColor="#FFFFFF"-->
+<!--                            android:textSize="22sp" />-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/latest_important_news_recycler_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginEnd="6dp"
-                            android:clipToPadding="false"
-                            android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/news_in_description" />
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/latest_important_news_recycler_view"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="16dp"-->
+<!--                            android:layout_marginTop="15dp"-->
+<!--                            android:layout_marginEnd="6dp"-->
+<!--                            android:clipToPadding="false"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                            tools:listitem="@layout/news_in_description" />-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -321,9 +321,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_back"
+        android:src="@drawable/ic_back_desc"
         tools:ignore="ContentDescription" />
 </FrameLayout>

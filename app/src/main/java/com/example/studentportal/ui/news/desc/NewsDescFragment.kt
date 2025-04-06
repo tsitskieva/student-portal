@@ -1,8 +1,10 @@
 package com.example.studentportal.ui.news.desc
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -45,6 +47,10 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
                 layoutInflater.inflate(R.layout.category_item, categoriesContainer, false)
             categoryView.findViewById<TextView>(R.id.category_text).text = category
             categoriesContainer.addView(categoryView)
+
+            val layoutParams = categoryView.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.setMargins(0, 0, 10, 0)
+            categoryView.layoutParams = layoutParams
         }
 
         // Галерея
@@ -59,10 +65,10 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             NewsRepository.newss.take(3)
         )
 
-        setupRecyclerView(
-            view.findViewById(R.id.latest_important_news_recycler_view),
-            NewsRepository.newss.filter { it.isImportant }.take(3)
-        )
+//        setupRecyclerView(
+//            view.findViewById(R.id.latest_important_news_recycler_view),
+//            NewsRepository.newss.filter { it.isImportant }.take(3)
+//        )
 
         // Кнопка назад
         btnBack.setOnClickListener {
@@ -76,6 +82,9 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             LinearLayoutManager.HORIZONTAL,
             false
         )
+
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_10dp)
+        recyclerView.addItemDecoration(HorizontalSpacingItemDecoration(spacingInPixels))
 
         recyclerView.adapter = LatestNewsAdapter(
             data,
@@ -108,6 +117,16 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             sentences.take(mid).joinToString(".") to sentences.drop(mid).joinToString(".")
         } else {
             text to ""
+        }
+    }
+    class HorizontalSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            outRect.right = spacing // отступ справа для каждого элемента
         }
     }
 }

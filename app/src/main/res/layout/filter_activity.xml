@@ -31,7 +31,7 @@
             android:fontFamily="@font/raleway"
             android:text="@string/select_tags"
             android:textColor="#777883"
-            android:textSize="14sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_close" />
@@ -86,7 +86,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/students"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,7 +101,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/applicants"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/filter_student"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -116,7 +116,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/university"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/filter_applicant"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -131,7 +131,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/employees"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_student" />
 
@@ -147,7 +147,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/university_name"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/filter_employee"
                 app:layout_constraintTop_toBottomOf="@+id/filter_applicant" />
 
@@ -163,7 +163,7 @@
                 android:paddingVertical="10dp"
                 android:text="@string/samodelka"
                 android:textColor="#B8B7B7"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/filter_fvt"
                 app:layout_constraintTop_toBottomOf="@+id/filter_uni" />
 
