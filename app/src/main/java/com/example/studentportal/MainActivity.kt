@@ -25,12 +25,20 @@ class MainActivity : ComponentActivity() {
         val groupContainer = findViewById<ConstraintLayout>(R.id.group_container)
         val numberOfGroup = findViewById<TextView>(R.id.number_of_group)
 
+//        val brsContainer = findViewById<ConstraintLayout>(R.id.brs_container)
+//        val numberOfBrs = findViewById<TextView>(R.id.number_of_brs)
+
         updateGroupsCount(numberOfGroup)
 
         groupContainer.setOnClickListener {
             val intent = Intent(this, GroupsSettingsActivity::class.java)
             startForResult.launch(intent)
         }
+
+//        brsContainer.setOnClickListener {
+//            val intent = Intent(this, BrsSettingsActivity::class.java)
+//            startForResult.launch(intent)
+//        }
     }
 
     private fun updateGroupsCount(textView: TextView) {

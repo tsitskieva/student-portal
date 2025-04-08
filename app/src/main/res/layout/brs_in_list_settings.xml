@@ -12,7 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingVertical="11dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout1"
@@ -35,28 +36,19 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/group_list_text1"
+                    android:id="@+id/brs_list_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/raleway_semibold"
-                    android:text="Number of direction"
+                    android:text="BRS code"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/group_list_text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:fontFamily="@font/raleway"
-                    android:text="Number of group"
-                    android:textColor="#777883"
-                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/group_list_button_off"
+                android:id="@+id/brs_list_button_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_group_off"
@@ -68,7 +60,7 @@
                 android:focusable="true"/>
 
             <ImageView
-                android:id="@+id/group_list_button_on"
+                android:id="@+id/brs_list_button_on"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_group_on"
@@ -79,7 +71,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/group_list_line_not_active"
+            android:id="@+id/brs_list_line_not_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_line_not_active"
@@ -91,7 +83,7 @@
 
 
         <ImageView
-            android:id="@+id/group_list_line_active"
+            android:id="@+id/brs_list_line_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_group_line"

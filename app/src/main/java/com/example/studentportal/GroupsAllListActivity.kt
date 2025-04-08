@@ -62,12 +62,12 @@ class GroupsAllListActivity : ComponentActivity() {
                 Toast.makeText(this, "Эта группа уже добавлена", Toast.LENGTH_SHORT).show()
             } else {
                 selectedGroups.forEach { it.isActive = false }
-                val newGroup = group(direction = group.direction, group = group.group, isActive = true)
+                val newGroup = group.copy(isActive = true)
                 selectedGroups.add(newGroup)
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
 
-                adapter.updateList(adapter.getGroups().filterNot {
-                    it.direction == group.direction && it.group == group.group
+                adapter.updateList(allGroups.filter { g ->
+                    !selectedGroups.any { it.direction == g.direction && it.group == g.group }
                 })
 
                 Toast.makeText(this, "Группа добавлена", Toast.LENGTH_SHORT).show()

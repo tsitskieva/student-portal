@@ -45,20 +45,15 @@ class GroupsSettingsActivity : ComponentActivity() {
                 setResult(RESULT_OK)
             },
             onDeleteClick = { groupToDelete ->
-                // Если удаляем активную группу
-                if (groupToDelete.isActive && selectedGroups.size > 1) {
-                    // Находим следующую группу после удаляемой (или первую, если удаляемая последняя)
-                    val nextActiveIndex = if (selectedGroups.indexOf(groupToDelete) < selectedGroups.size - 1) {
-                        selectedGroups.indexOf(groupToDelete)
-                    } else {
-                        0
-                    }
-                    selectedGroups[nextActiveIndex].isActive = true
+                val isDeletingActive = groupToDelete.isActive
+                selectedGroups.remove(groupToDelete)
+
+                if (isDeletingActive && selectedGroups.isNotEmpty()) {
+                    selectedGroups[0].isActive = true
                 }
 
-                selectedGroups.remove(groupToDelete)
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
-                selectedGroupsAdapter.updateList(selectedGroups)
+                updateGroupsList()
                 setResult(RESULT_OK)
             }
         )
@@ -90,6 +85,12 @@ class GroupsSettingsActivity : ComponentActivity() {
 
     private fun updateGroupsList() {
         selectedGroups = SelectedGroupsManager.getSelectedGroups(this).toMutableList()
+
+        if (selectedGroups.isNotEmpty() && !selectedGroups.any { it.isActive }) {
+            selectedGroups[0].isActive = true
+            SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
+        }
+
         selectedGroupsAdapter.updateList(selectedGroups)
     }
 }

@@ -20,6 +20,11 @@ object SelectedGroupsManager {
         val activeGroup = groups.find { it.isActive }
         activeGroup?.let {
             saveActiveGroup(context, it.direction, it.group)
+        } ?: run {
+            // Если нет активной группы, но есть группы, делаем первую активной
+            if (groups.isNotEmpty()) {
+                saveActiveGroup(context, groups[0].direction, groups[0].group)
+            }
         }
     }
 
@@ -35,6 +40,12 @@ object SelectedGroupsManager {
             groups.forEach {
                 it.isActive = (it.direction == activeGroup?.first && it.group == activeGroup.second)
             }
+
+            // Если нет активной группы, но есть группы, делаем первую активной
+            if (groups.isNotEmpty() && !groups.any { it.isActive }) {
+                groups[0].isActive = true
+            }
+
             groups.sortedByDescending { it.isActive }
         } else {
             emptyList()
