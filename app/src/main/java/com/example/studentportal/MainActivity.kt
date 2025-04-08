@@ -25,9 +25,6 @@ class MainActivity : ComponentActivity() {
         val groupContainer = findViewById<ConstraintLayout>(R.id.group_container)
         val numberOfGroup = findViewById<TextView>(R.id.number_of_group)
 
-//        val brsContainer = findViewById<ConstraintLayout>(R.id.brs_container)
-//        val numberOfBrs = findViewById<TextView>(R.id.number_of_brs)
-
         updateGroupsCount(numberOfGroup)
 
         groupContainer.setOnClickListener {
@@ -35,14 +32,24 @@ class MainActivity : ComponentActivity() {
             startForResult.launch(intent)
         }
 
-//        brsContainer.setOnClickListener {
-//            val intent = Intent(this, BrsSettingsActivity::class.java)
-//            startForResult.launch(intent)
-//        }
+        val brsContainer = findViewById<ConstraintLayout>(R.id.brs_container)
+        val numberOfBrs = findViewById<TextView>(R.id.number_of_brs)
+
+        updateBrsCount(numberOfBrs)
+
+        brsContainer.setOnClickListener {
+            val intent = Intent(this, BrsSettingsActivity::class.java)
+            startForResult.launch(intent)
+        }
     }
 
     private fun updateGroupsCount(textView: TextView) {
         val count = SelectedGroupsManager.getSelectedGroups(this).size
+        textView.text = count.toString()
+    }
+
+    private fun updateBrsCount(textView: TextView) {
+        val count = SelectedBrsManager.getSelectedBrs(this).size
         textView.text = count.toString()
     }
 
