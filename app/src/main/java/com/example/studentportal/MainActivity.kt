@@ -2,6 +2,8 @@ package com.example.studentportal
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -40,6 +42,43 @@ class MainActivity : ComponentActivity() {
         brsContainer.setOnClickListener {
             val intent = Intent(this, BrsSettingsActivity::class.java)
             startForResult.launch(intent)
+        }
+
+        // Получаем Switch и контейнер настроек
+        val notificationsSwitch = findViewById<Switch>(R.id.switch_notifications_lesson)
+        val notificationsSettingsContainer = findViewById<ConstraintLayout>(R.id.notifications_lesson_container_settings)
+
+        // Загружаем сохранённое состояние (по умолчанию false)
+        val sharedPrefs = getSharedPreferences("AppSettings", MODE_PRIVATE)
+        val isNotificationsEnabled = sharedPrefs.getBoolean("notifications_enabled", false)
+        notificationsSwitch.isChecked = isNotificationsEnabled
+
+        // Устанавливаем видимость контейнера в зависимости от состояния Switch
+        notificationsSettingsContainer.visibility = if (isNotificationsEnabled) View.VISIBLE else View.GONE
+
+        // Обработка изменений Switch
+        notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // Сохраняем новое состояние
+            sharedPrefs.edit().putBoolean("notifications_enabled", isChecked).apply()
+
+            // Меняем видимость контейнера
+            notificationsSettingsContainer.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("notifications_enabled", isChecked).apply()
+
+            if (isChecked) {
+                notificationsSettingsContainer.visibility = View.VISIBLE
+                notificationsSettingsContainer.alpha = 0f
+                notificationsSettingsContainer.animate().alpha(1f).setDuration(250).start()
+            } else {
+                notificationsSettingsContainer.animate()
+                    .alpha(0f)
+                    .setDuration(250)
+                    .withEndAction { notificationsSettingsContainer.visibility = View.GONE }
+                    .start()
+            }
         }
     }
 
