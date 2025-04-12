@@ -13,6 +13,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
 import com.example.studentportal.data.model.News
@@ -77,14 +78,18 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView, data: List<News>) {
-        recyclerView.layoutManager = LinearLayoutManager(
+        val layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
+        recyclerView.layoutManager = layoutManager
 
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_10dp)
         recyclerView.addItemDecoration(HorizontalSpacingItemDecoration(spacingInPixels))
+
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
 
         recyclerView.adapter = LatestNewsAdapter(
             data,

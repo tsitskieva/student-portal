@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -76,12 +77,14 @@ class ScheduleFragment : Fragment() {
         weekDays.forEach { day ->
             day.setOnClickListener {
                 val dayIndex = weekDays.indexOf(day)
-                weekManager?.setSelectedDayOfWeek(Calendar.MONDAY + dayIndex)
+                val dayOfWeek = if (dayIndex == 6) Calendar.SUNDAY else Calendar.MONDAY + dayIndex
+                weekManager?.setSelectedDayOfWeek(dayOfWeek)
                 updateData()
             }
         }
 
         updateData()
+        updateEmptyStateVisibility(lessonsAdapter.itemCount == 0)
     }
 
     private fun updateData() {
@@ -96,6 +99,14 @@ class ScheduleFragment : Fragment() {
         } ?: emptyList()
         lessonsAdapter.lessons = lessons
         lessonsAdapter.notifyDataSetChanged()
+        updateEmptyStateVisibility(lessons.isEmpty())
+    }
+
+    private fun updateEmptyStateVisibility(isEmpty: Boolean) {
+        view?.findViewById<ConstraintLayout>(R.id.empty_state_lesson_container)?.visibility =
+            if (isEmpty) View.VISIBLE else View.GONE
+        view?.findViewById<RecyclerView>(R.id.lessons_list)?.visibility =
+            if (isEmpty) View.GONE else View.VISIBLE
     }
 
     private fun getLessonsForDay(dayOfWeek: Int, weekType: String): List<Lesson> {

@@ -316,12 +316,13 @@
     </ScrollView>
 
     <ImageView
+        android:padding="10dp"
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_back_desc"
