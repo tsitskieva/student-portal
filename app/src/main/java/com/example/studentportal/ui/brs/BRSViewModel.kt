@@ -10,12 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.studentportal.data.model.Discipline
 import com.example.studentportal.data.model.Semester
 import com.example.studentportal.data.repository.BRSRepository
-import com.example.studentportal.ui.utils.TokenManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import com.example.studentportal.ui.profile.managers.SelectedBrsManager
 
 class BRSViewModel(private val context: Context) : ViewModel() {
     private val repository = BRSRepository(context)
@@ -42,9 +42,15 @@ class BRSViewModel(private val context: Context) : ViewModel() {
     fun saveSpinnerPosition(position: Int) {
         _spinnerPosition.postValue(position)
     }
+    private fun getActiveToken(): String {
+        return SelectedBrsManager.getSelectedBrs(context)
+            .find { it.isActive }
+            ?.code ?: throw Exception("No active BRS selected")
+    }
 
     suspend fun getSemestersWithData(): List<Semester> {
-        val allSemesters = repository.getSemesters()
+        val token = getActiveToken()
+        val allSemesters = repository.getSemesters(token)
         val sortedSemesters = allSemesters.sortedWith(
             compareByDescending<Semester> { it.year }.thenByDescending { it.num }
         )
@@ -74,10 +80,6 @@ class BRSViewModel(private val context: Context) : ViewModel() {
                     return@launch
                 }
 
-                if (!TokenManager.isLoggedIn(context)) {
-                    _errorMessage.postValue("Требуется авторизация")
-                    return@launch
-                }
 
                 _isLoading.postValue(true)
                 val filteredSemesters = getSemestersWithData()
@@ -92,23 +94,6 @@ class BRSViewModel(private val context: Context) : ViewModel() {
 
             } catch (e: Exception) {
                 _errorMessage.postValue("Ошибка загрузки семестров: ${e.message}")
-            } finally {
-                _isLoading.postValue(false)
-            }
-        }
-    }
-
-    fun login(login: String, password: String) {
-        viewModelScope.launch {
-            try {
-                _isLoading.postValue(true)
-                val token = repository.login(login, password)
-                TokenManager.saveToken(context, token)
-                repository.clearCache()
-                loadSemesters()
-            } catch (e: Exception) {
-                _errorMessage.postValue("Ошибка авторизации: ${e.message}")
-                TokenManager.clearToken(context) // Очищаем токен при ошибке
             } finally {
                 _isLoading.postValue(false)
             }

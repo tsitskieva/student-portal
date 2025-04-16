@@ -2,14 +2,17 @@ package com.example.studentportal.ui.brs
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,8 +21,7 @@ import com.example.studentportal.R
 import com.example.studentportal.data.model.Discipline
 import com.example.studentportal.data.model.Semester
 import com.example.studentportal.ui.brs.adapter.DisciplineAdapter
-import com.example.studentportal.ui.utils.TokenManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.example.studentportal.ui.profile.managers.SelectedBrsManager
 
 class BRSFragment : Fragment() {
     private var _binding: FragmentBrsBinding? = null
@@ -32,6 +34,7 @@ class BRSFragment : Fragment() {
     private lateinit var tvSemesterNumber: TextView
     private lateinit var tvCourse: TextView
     private lateinit var tvYear: TextView
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,17 +57,39 @@ class BRSFragment : Fragment() {
         btnPrevious.setOnClickListener { showPreviousSemester() }
         btnNext.setOnClickListener { showNextSemester() }
 
-        binding.logoutButton.setOnClickListener {
-            performLogout()
+        sharedViewModel.refreshBrs.observe(viewLifecycleOwner) { shouldRefresh ->
+            if (shouldRefresh) {
+                viewModel.clearData()
+                checkBrsAvailability()
+            }
         }
+
         setupRecyclerView()
         setupObservers()
         setupUI()
+        checkBrsAvailability()
+    }
 
-        if (TokenManager.isLoggedIn(requireContext())) {
-            loadData()
+    private fun checkBrsAvailability() {
+        val brsList = SelectedBrsManager.getSelectedBrs(requireContext())
+        if (brsList.isEmpty()) {
+            viewModel.clearData()
+            showEmptyBrsState()
         } else {
-            showLoginDialog()
+            loadData()
+        }
+    }
+
+    private fun showEmptyBrsState() {
+        binding.apply {
+            semesterSelector.root.visibility = View.GONE
+            recyclerViewDisciplines.visibility = View.GONE
+            emptyState.visibility = View.VISIBLE
+
+            // Добавляем кнопку для перехода к добавлению БРС
+            btnAddBrs.setOnClickListener {
+                findNavController().navigate(R.id.action_brs_to_brsSettings)
+            }
         }
     }
 
@@ -124,19 +149,26 @@ class BRSFragment : Fragment() {
     private fun updateDisciplinesList(disciplines: List<Discipline>) {
         binding.apply {
             if (disciplines.isEmpty()) {
-                tvEmpty.visibility = if (semesters.isEmpty()) View.VISIBLE else View.GONE
+                if (semesters.isEmpty()) {
+                    emptyState.visibility = View.VISIBLE
+                    semesterSelector.root.visibility = View.GONE
+                } else {
+                    emptyState.visibility = View.GONE
+                    semesterSelector.root.visibility = View.VISIBLE
+                }
                 recyclerViewDisciplines.visibility = View.GONE
             } else {
+                emptyState.visibility = View.GONE
+                semesterSelector.root.visibility = View.VISIBLE
                 recyclerViewDisciplines.visibility = View.VISIBLE
-                tvEmpty.visibility = View.GONE
                 (recyclerViewDisciplines.adapter as? DisciplineAdapter)?.updateItems(disciplines)
-
             }
         }
     }
 
     private fun setupSemesterSpinner(semesters: List<Semester>) {
         this.semesters = semesters
+        binding.semesterSelector.root.visibility = if (semesters.isNotEmpty()) View.VISIBLE else View.GONE
         currentSemesterIndex = viewModel.spinnerPosition.value ?: 0
         updateSemesterDisplay()
     }
@@ -175,47 +207,13 @@ class BRSFragment : Fragment() {
         }
     }
 
-    private fun showLoginDialog() {
-        if (TokenManager.isLoggedIn(requireContext())) return
-
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_login, null)
-        val etLogin = dialogView.findViewById<EditText>(R.id.etLogin)
-        val etPassword = dialogView.findViewById<EditText>(R.id.etPassword)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Авторизация в БРС")
-            .setView(dialogView)
-            .setCancelable(false)
-            .setPositiveButton("Войти") { _, _ ->
-                val login = etLogin.text.toString()
-                val password = etPassword.text.toString()
-                if (login.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.login(login, password)
-                }
-            }
-            .setNegativeButton("Отмена") { _, _ ->
-                parentFragmentManager.popBackStack()
-            }
-            .show()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun performLogout() {
-        TokenManager.clearToken(requireContext())
-        viewModel.clearData()
-        showLoginDialog()
-        clearUI()
-    }
-
     override fun onResume() {
         super.onResume()
-        if (!TokenManager.isLoggedIn(requireContext())) {
-            showLoginDialog()
-        }
     }
 
     private fun clearUI() {

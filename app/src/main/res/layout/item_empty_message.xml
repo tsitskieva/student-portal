@@ -6,5 +6,5 @@
     android:padding="24dp"
     android:text="@string/discipline_not_completed"
     android:textColor="#777883"
-    android:textSize="16sp"
+    android:textSize="18sp"
     android:textStyle="italic" />

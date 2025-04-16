@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnPrevious"
+            android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -94,7 +94,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnNext"
+            android:id="@+id/btnPrevious"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

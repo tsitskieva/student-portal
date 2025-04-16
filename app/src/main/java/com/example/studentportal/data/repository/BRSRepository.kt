@@ -9,8 +9,8 @@ import com.example.studentportal.data.model.Submodule
 import com.example.studentportal.network.BRSApiService
 import com.example.studentportal.network.RetrofitClient
 import com.example.studentportal.network.response.DisciplineDetailsResponse
-import com.example.studentportal.ui.utils.TokenManager
 import retrofit2.HttpException
+import com.example.studentportal.ui.profile.managers.SelectedBrsManager
 
 class BRSRepository(private val context: Context) {
     private val apiService: BRSApiService =
@@ -19,13 +19,14 @@ class BRSRepository(private val context: Context) {
     private var cachedSemesters: List<Semester> = emptyList()
     private val semesterValidityCache = mutableMapOf<Int, Boolean>()
 
-    private fun getSavedToken(): String {
-        return TokenManager.getToken(context) ?: throw Exception("Not authenticated")
+    private fun getActiveToken(): String {
+        return SelectedBrsManager.getSelectedBrs(context)
+            .find { it.isActive }
+            ?.code ?: throw Exception("No active BRS selected")
     }
 
-    suspend fun getSemesters(): List<Semester> {
+    suspend fun getSemesters(token: String): List<Semester> {
         return if (cachedSemesters.isEmpty()) {
-            val token = getSavedToken()
             val response = apiService.getSemesters(token)
             cachedSemesters = response.semesters
             semesterValidityCache.clear()
@@ -47,12 +48,6 @@ class BRSRepository(private val context: Context) {
         }
     }
 
-    suspend fun login(login: String, password: String): String {
-        val response = apiService.login(login, password)
-        if (!response.response.success) throw Exception("Ошибка авторизации")
-        return response.response.token
-    }
-
     suspend fun getDisciplines(semesterId: Int): List<Discipline> {
         return cache[semesterId] ?: loadFromNetwork(semesterId).also {
             cache[semesterId] = it
@@ -61,13 +56,12 @@ class BRSRepository(private val context: Context) {
 
     private suspend fun loadFromNetwork(semesterId: Int): List<Discipline> {
         return try {
-            val token = getSavedToken()
+            val token = getActiveToken()
             val response = apiService.getDisciplines(token, semesterId)
             response.mappedDisciplines
         } catch (e: HttpException) {
             if (e.code() == 401) {
                 cache.clear()
-                TokenManager.saveToken(context, "")
                 throw Exception("Сессия истекла")
             }
             throw e
@@ -77,10 +71,11 @@ class BRSRepository(private val context: Context) {
     fun clearCache() {
         cachedSemesters = emptyList()
         cache.clear()
+        semesterValidityCache.clear()
     }
 
     suspend fun getDisciplineDetails(disciplineId: Int): DisciplineDetails {
-        val token = getSavedToken()
+        val token = getActiveToken()
         val response = apiService.getDisciplineDetails(token, disciplineId)
         return parseDetails(response)
     }

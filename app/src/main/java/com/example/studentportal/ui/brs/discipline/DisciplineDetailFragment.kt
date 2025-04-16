@@ -2,6 +2,7 @@ package com.example.studentportal.ui.brs.discipline
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -223,16 +225,42 @@ class DisciplineDetailFragment : Fragment() {
         val scrollView = binding.nestedScrollView
         val child = scrollView.getChildAt(0)
         val isContentScrollable = child.height > scrollView.height
-        val scrollRange = child.height - scrollView.height
-        val currentScroll = scrollView.scrollY
 
-        val isAtBottom = currentScroll >= scrollRange - 2
+        // Получаем положение целевых элементов
+        val admissionCard = binding.admissionCard
+        val finalRatingCard = binding.finalRatingCard
 
-        binding.fixedScoreView.visibility = if (isContentScrollable && !isAtBottom) {
-            View.VISIBLE
-        } else {
-            View.GONE
+        // Проверяем видимость элементов
+        val shouldHideForAdmission = isViewVisibleInScroll(admissionCard, scrollView)
+                && admissionCard.visibility == View.VISIBLE
+
+        val shouldHideForFinal = isViewVisibleInScroll(finalRatingCard, scrollView)
+
+        val isAtBottom = scrollView.scrollY >= child.height - scrollView.height - 2
+
+        binding.fixedScoreView.visibility = when {
+            shouldHideForAdmission || shouldHideForFinal || isAtBottom -> View.GONE
+            isContentScrollable -> View.VISIBLE
+            else -> View.GONE
         }
+    }
+
+    private fun isViewVisibleInScroll(view: View, scrollView: NestedScrollView): Boolean {
+        if (view.visibility != View.VISIBLE) return false
+
+        val scrollBounds = Rect()
+        scrollView.getHitRect(scrollBounds)
+
+        val viewPosition = IntArray(2)
+        view.getLocationOnScreen(viewPosition)
+
+        val scrollPosition = IntArray(2)
+        scrollView.getLocationOnScreen(scrollPosition)
+
+        val relativeTop = viewPosition[1] - scrollPosition[1]
+        val relativeBottom = relativeTop + view.height
+
+        return relativeBottom <= scrollBounds.bottom && relativeTop >= scrollBounds.top
     }
 
     private fun showErrorMessage(message: String) {

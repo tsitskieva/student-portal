@@ -120,7 +120,46 @@
         android:id="@+id/nav_profile"
         android:name="com.example.studentportal.ui.profile.ProfileFragment"
         android:label="Профиль"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profile_to_brsSettings"
+            app:destination="@id/brsSettingsFragment"/>
+
+        <action
+            android:id="@+id/action_profile_to_groupsSettings"
+            app:destination="@id/groupsSettingsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/brsSettingsFragment"
+        android:name="com.example.studentportal.ui.profile.BrsSettingsFragment"
+        android:label="Настройка БРС">
+
+        <action
+            android:id="@+id/action_brsSettings_to_brsAdd"
+            app:destination="@id/brsAddFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupsSettingsFragment"
+        android:name="com.example.studentportal.ui.profile.GroupsSettingsFragment"
+        android:label="Настройка групп">
+
+        <action
+            android:id="@+id/action_groupsSettings_to_groupsAllList"
+            app:destination="@id/groupsAllListFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/brsAddFragment"
+        android:name="com.example.studentportal.ui.profile.BrsAddFragment"
+        android:label="Добавить БРС"/>
+
+    <fragment
+        android:id="@+id/groupsAllListFragment"
+        android:name="com.example.studentportal.ui.profile.GroupsAllListFragment"
+        android:label="Выбор групп"/>
 
     <fragment
         android:id="@+id/nav_brs"
@@ -135,7 +174,13 @@
                 android:name="disciplineId"
                 app:argType="integer" />
         </action>
+
+        <action
+            android:id="@+id/action_brs_to_brsSettings"
+            app:destination="@id/brsSettingsFragment"/>
+
     </fragment>
+
     <fragment
         android:id="@+id/disciplineDetailFragment"
         android:name="com.example.studentportal.ui.brs.discipline.DisciplineDetailFragment"

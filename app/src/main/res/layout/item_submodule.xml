@@ -33,7 +33,7 @@
                 android:maxLines="2"
                 android:paddingEnd="20dp"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 tools:ignore="RtlSymmetry" />
 
             <!-- Баллы -->
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
                     android:paddingHorizontal="4sp"
                     android:text="@string/hyphen"
                     android:textColor="#777883"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tvMaxScore"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:textColor="#777883"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
         </LinearLayout>
 

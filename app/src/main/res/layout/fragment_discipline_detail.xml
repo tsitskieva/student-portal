@@ -65,7 +65,7 @@
                     android:gravity="center"
                     android:maxLines="2"
                     android:textColor="#FFFFFF"
-                    android:textSize="19sp"
+                    android:textSize="21sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/rightSpace"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -99,14 +99,14 @@
                             android:fontFamily="@font/lato_bold"
                             android:text="Баллы за семестр"
                             android:textColor="#FFFFFF"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             tools:ignore="HardcodedText" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvModules"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="12dp"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -132,7 +132,7 @@
                             android:fontFamily="@font/lato"
                             android:text="Допуск к экзамену"
                             android:textColor="#FFFFFF"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             tools:ignore="HardcodedText" />
 
                         <include
@@ -165,7 +165,7 @@
                             android:fontFamily="@font/lato"
                             android:text="Экзамен"
                             android:textColor="#FFFFFF"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             tools:ignore="HardcodedText" />
 
                         <include
@@ -197,7 +197,7 @@
                             android:fontFamily="@font/lato"
                             android:text="Итоговый рейтинг"
                             android:textColor="#FFFFFF"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             tools:ignore="HardcodedText" />
 
                         <!-- Итоговый сабмодуль -->
@@ -262,7 +262,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -271,7 +271,7 @@
                     android:paddingHorizontal="6dp"
                     android:text="@string/hyphen"
                     android:textColor="#777883"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tvFixedMaxScore"
@@ -279,7 +279,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 

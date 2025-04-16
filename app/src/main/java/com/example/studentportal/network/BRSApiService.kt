@@ -11,13 +11,6 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface BRSApiService {
-    @FormUrlEncoded
-    @POST("api/v1/auth/get_token")
-    suspend fun login(
-        @Field("login") login: String,
-        @Field("password") password: String
-    ): LoginResponse
-
     @GET("api/v1/student/semester_list")
     suspend fun getSemesters(
         @Query("token") token: String
