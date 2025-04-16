@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,7 @@ class BrsSettingsFragment : Fragment() {
     private lateinit var selectedBrs: MutableList<Brs>
     private lateinit var recyclerView: RecyclerView
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var emptyStateContainer: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,16 +39,29 @@ class BrsSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupFragmentResultListener()
         selectedBrs = SelectedBrsManager.getSelectedBrs(requireContext()).toMutableList()
 
         initRecyclerView(view)
         setupBackButton(view)
         setupAddButton(view)
+        updateEmptyState()
+    }
+
+    private fun setupFragmentResultListener() {
+        setFragmentResultListener("brs_add_request") { _, bundle ->
+            if (bundle.getBoolean("refresh_needed", false)) {
+                updateBrsList()
+                sharedViewModel.triggerBrsRefresh()
+                updateEmptyState()
+            }
+        }
     }
 
     private fun initRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.list_of_choosen_brs)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        emptyStateContainer = view.findViewById(R.id.empty_state_brs_container)
 
         selectedBrsAdapter = SelectedBrsAdapter(
             selectedBrs,
@@ -54,7 +70,8 @@ class BrsSettingsFragment : Fragment() {
                 clickedBrs.isActive = true
                 SelectedBrsManager.saveSelectedBrs(requireContext(), selectedBrs)
                 selectedBrsAdapter.updateList(selectedBrs)
-                requireActivity().setResult(android.app.Activity.RESULT_OK)
+                sharedViewModel.triggerBrsRefresh()
+                updateEmptyState()
             },
             onDeleteClick = { brsToDelete ->
                 val isDeletingActive = brsToDelete.isActive
@@ -67,7 +84,7 @@ class BrsSettingsFragment : Fragment() {
                 SelectedBrsManager.saveSelectedBrs(requireContext(), selectedBrs)
                 updateBrsList()
                 sharedViewModel.triggerBrsRefresh()
-                requireActivity().setResult(android.app.Activity.RESULT_OK)
+                updateEmptyState()
             }
         )
 
@@ -109,5 +126,21 @@ class BrsSettingsFragment : Fragment() {
         }
 
         selectedBrsAdapter.updateList(selectedBrs)
+        updateEmptyState()
+    }
+
+    private fun updateEmptyState() {
+        if (selectedBrs.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyStateContainer.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyStateContainer.visibility = View.GONE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateBrsList()
     }
 }

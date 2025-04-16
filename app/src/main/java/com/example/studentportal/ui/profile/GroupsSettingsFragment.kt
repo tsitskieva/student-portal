@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,15 +23,17 @@ class GroupsSettingsFragment : Fragment() {
     private lateinit var selectedGroupsAdapter: SelectedGroupsAdapter
     private lateinit var selectedGroups: MutableList<Group>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyStateContainer: ConstraintLayout
 
-        private val startForResult = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == android.app.Activity.RESULT_OK) {
-                updateGroupsList()
-                requireActivity().setResult(android.app.Activity.RESULT_OK)
-            }
+    private val startForResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            updateGroupsList()
+            requireActivity().setResult(android.app.Activity.RESULT_OK)
+            updateEmptyState()
         }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +51,13 @@ class GroupsSettingsFragment : Fragment() {
         initRecyclerView(view)
         setupBackButton(view)
         setupAddButton(view)
+        updateEmptyState()
     }
 
     private fun initRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.list_of_choosen_groups)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        emptyStateContainer = view.findViewById(R.id.empty_state_group_container)
 
         selectedGroupsAdapter = SelectedGroupsAdapter(
             selectedGroups,
@@ -62,6 +67,7 @@ class GroupsSettingsFragment : Fragment() {
                 SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
                 selectedGroupsAdapter.updateList(selectedGroups)
                 requireActivity().setResult(android.app.Activity.RESULT_OK)
+                updateEmptyState()
             },
             onDeleteClick = { groupToDelete ->
                 val isDeletingActive = groupToDelete.isActive
@@ -74,6 +80,7 @@ class GroupsSettingsFragment : Fragment() {
                 SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
                 updateGroupsList()
                 requireActivity().setResult(android.app.Activity.RESULT_OK)
+                updateEmptyState()
             }
         )
 
@@ -114,5 +121,16 @@ class GroupsSettingsFragment : Fragment() {
         }
 
         selectedGroupsAdapter.updateList(selectedGroups)
+        updateEmptyState()
+    }
+
+    private fun updateEmptyState() {
+        if (selectedGroups.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyStateContainer.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyStateContainer.visibility = View.GONE
+        }
     }
 }
