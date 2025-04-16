@@ -5,11 +5,13 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.TouchDelegate
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -17,6 +19,7 @@ class BrsSettingsActivity : ComponentActivity() {
     private lateinit var selectedBrsAdapter: SelectedBrsAdapter
     private lateinit var selectedBrs: MutableList<brs>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyStateContainer: ConstraintLayout
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -24,12 +27,15 @@ class BrsSettingsActivity : ComponentActivity() {
         if (result.resultCode == RESULT_OK) {
             updateBrsList()
             setResult(RESULT_OK)
+            updateEmptyState()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_brs_settings)
+
+        emptyStateContainer = findViewById(R.id.empty_state_brs_container)
 
         selectedBrs = SelectedBrsManager.getSelectedBrs(this).toMutableList()
 
@@ -44,6 +50,7 @@ class BrsSettingsActivity : ComponentActivity() {
                 SelectedBrsManager.saveSelectedBrs(this, selectedBrs)
                 selectedBrsAdapter.updateList(selectedBrs)
                 setResult(RESULT_OK)
+                updateEmptyState()
             },
             onDeleteClick = { brsToDelete ->
                 val isDeletingActive = brsToDelete.isActive
@@ -56,6 +63,7 @@ class BrsSettingsActivity : ComponentActivity() {
                 SelectedBrsManager.saveSelectedBrs(this, selectedBrs)
                 updateBrsList()
                 setResult(RESULT_OK)
+                updateEmptyState()
             }
         )
 
@@ -82,6 +90,7 @@ class BrsSettingsActivity : ComponentActivity() {
             val intent = Intent(this, BrsAddActivity::class.java)
             startForResult.launch(intent)
         }
+        updateEmptyState()
     }
 
     private fun updateBrsList() {
@@ -93,5 +102,15 @@ class BrsSettingsActivity : ComponentActivity() {
         }
 
         selectedBrsAdapter.updateList(selectedBrs)
+        updateEmptyState()
+    }
+    private fun updateEmptyState() {
+        if (selectedBrs.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyStateContainer.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyStateContainer.visibility = View.GONE
+        }
     }
 }

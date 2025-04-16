@@ -4,11 +4,13 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.TouchDelegate
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,6 +18,7 @@ class GroupsSettingsActivity : ComponentActivity() {
     private lateinit var selectedGroupsAdapter: SelectedGroupsAdapter
     private lateinit var selectedGroups: MutableList<group>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyStateContainer: ConstraintLayout
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -23,12 +26,15 @@ class GroupsSettingsActivity : ComponentActivity() {
         if (result.resultCode == RESULT_OK) {
             updateGroupsList()
             setResult(RESULT_OK)
+            updateEmptyState()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_groups_settings)
+
+        emptyStateContainer = findViewById(R.id.empty_state_group_container)
 
         selectedGroups = SelectedGroupsManager.getSelectedGroups(this).toMutableList()
 
@@ -43,6 +49,7 @@ class GroupsSettingsActivity : ComponentActivity() {
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
                 selectedGroupsAdapter.updateList(selectedGroups)
                 setResult(RESULT_OK)
+                updateEmptyState()
             },
             onDeleteClick = { groupToDelete ->
                 val isDeletingActive = groupToDelete.isActive
@@ -55,6 +62,7 @@ class GroupsSettingsActivity : ComponentActivity() {
                 SelectedGroupsManager.saveSelectedGroups(this, selectedGroups)
                 updateGroupsList()
                 setResult(RESULT_OK)
+                updateEmptyState()
             }
         )
 
@@ -81,6 +89,7 @@ class GroupsSettingsActivity : ComponentActivity() {
             val intent = Intent(this, GroupsAllListActivity::class.java)
             startForResult.launch(intent)
         }
+        updateEmptyState()
     }
 
     private fun updateGroupsList() {
@@ -92,5 +101,16 @@ class GroupsSettingsActivity : ComponentActivity() {
         }
 
         selectedGroupsAdapter.updateList(selectedGroups)
+        updateEmptyState()
+    }
+
+    private fun updateEmptyState() {
+        if (selectedGroups.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyStateContainer.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyStateContainer.visibility = View.GONE
+        }
     }
 }
