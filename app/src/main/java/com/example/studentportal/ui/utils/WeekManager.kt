@@ -101,7 +101,12 @@ class WeekManager(
         val diffInMillis = calendar.timeInMillis - startDate.timeInMillis
         val diffInWeeks = (diffInMillis / (1000 * 60 * 60 * 24 * 7)).toInt()
 
-        return if (diffInWeeks % 2 == 0) "Верхняя неделя" else "Нижняя неделя"
+        return if (diffInWeeks % 2 == 0) "Нижняя неделя" else "Верхняя" +
+                "" +
+                "" +
+                "" +
+                "" +
+                " неделя"
     }
 
     fun setSelectedDayOfWeek(dayOfWeek: Int) {

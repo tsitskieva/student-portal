@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/back_to_all_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="25dp"
+                android:layout_height="17dp"
                 android:layout_marginStart="20dp"
                 android:src="@drawable/ic_back"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +122,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:textAllCaps="false"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="24dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

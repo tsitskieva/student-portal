@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/buttonBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_back"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_weight="1"
@@ -110,8 +110,8 @@
 
                 <ImageView
                     android:id="@+id/buttonNext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_next"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

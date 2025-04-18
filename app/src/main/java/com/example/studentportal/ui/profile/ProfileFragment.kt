@@ -19,7 +19,7 @@ import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.utils.InputFilterMinMax
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-
+    private lateinit var emptyLessonsSwitch: Switch
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var notificationsSwitch: Switch
     private lateinit var notificationsSettingsContainer: ConstraintLayout
@@ -27,6 +27,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var numberOfBrs: TextView
     private lateinit var hoursEditText: EditText
     private lateinit var minutesEditText: EditText
+    private lateinit var compactViewSwitch: Switch
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -38,14 +39,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         initializeViews(view)
         setupSharedPreferences()
-        setupClickListeners()
+        setupClickListeners(view)
         setupNotificationSwitch()
         setupTimeInputs()
         setupFragmentResultListeners()
         updateCounters()
+        setupCompactViewSwitch()
+        setupEmptyLessonsSwitch()
     }
 
     private fun initializeViews(view: View) {
+        emptyLessonsSwitch = view.findViewById(R.id.switch_empty_lesson)
+        compactViewSwitch = view.findViewById(R.id.switch_small_lesson)
         numberOfGroup = view.findViewById(R.id.number_of_group)
         numberOfBrs = view.findViewById(R.id.number_of_brs)
         notificationsSwitch = view.findViewById(R.id.switch_notifications_lesson)
@@ -61,12 +66,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         )
     }
 
-    private fun setupClickListeners() {
-        view?.findViewById<ConstraintLayout>(R.id.group_container)?.setOnClickListener {
+    private fun setupClickListeners(view: View) {
+        view.findViewById<ConstraintLayout>(R.id.group_container).setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_groupsSettings)
         }
 
-        view?.findViewById<ConstraintLayout>(R.id.brs_container)?.setOnClickListener {
+        view.findViewById<ConstraintLayout>(R.id.brs_container).setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_brsSettings)
         }
     }
@@ -83,11 +88,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun setupTimeInputs() {
-        // Установка фильтров ввода
         hoursEditText.filters = arrayOf(InputFilterMinMax(0, 24))
         minutesEditText.filters = arrayOf(InputFilterMinMax(0, 60))
 
-        // Загрузка сохраненных значений
         val savedHours = sharedPrefs.getInt("notification_hours", 0)
         val savedMinutes = sharedPrefs.getInt("notification_minutes", 0)
         hoursEditText.setText(savedHours.toString())
@@ -148,7 +151,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun updateCounters() {
-        // Обновление счетчиков групп и БРС
         updateGroupsCount()
         updateBrsCount()
     }
@@ -190,5 +192,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             .putInt("notification_hours", hours)
             .putInt("notification_minutes", minutes)
             .apply()
+    }
+
+    private fun setupCompactViewSwitch() {
+        val isCompactView = sharedPrefs.getBoolean("compact_view_enabled", false)
+        compactViewSwitch.isChecked = isCompactView
+
+        compactViewSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("compact_view_enabled", isChecked).apply()
+        }
+    }
+
+    private fun setupEmptyLessonsSwitch() {
+        val showEmptyLessons = sharedPrefs.getBoolean("show_empty_lessons", false)
+        emptyLessonsSwitch.isChecked = showEmptyLessons
+
+        emptyLessonsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("show_empty_lessons", isChecked).apply()
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.studentportal.ui.schedule
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import com.example.studentportal.ui.utils.WeekManager
 import java.util.Calendar
 
 class ScheduleFragment : Fragment() {
+    private var isCompactView: Boolean = false
     private lateinit var weekYearTV: TextView
     private lateinit var weekTypeTV: TextView
     private lateinit var weekDays: List<TextView>
@@ -40,6 +42,9 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        isCompactView = sharedPrefs.getBoolean("compact_view_enabled", false)
+
         weekYearTV = view.findViewById(R.id.textView2)
         weekTypeTV = view.findViewById(R.id.textView3)
         lessonsList = view.findViewById(R.id.lessons_list)
@@ -55,10 +60,9 @@ class ScheduleFragment : Fragment() {
         )
 
         lessonsList.layoutManager = LinearLayoutManager(requireContext())
-        lessonsAdapter = LessonsAdapter(emptyList(), requireContext(), findNavController())
+        lessonsAdapter = LessonsAdapter(emptyList(), requireContext(), findNavController(), isCompactView)
         lessonsList.adapter = lessonsAdapter
 
-        // Инициализация с текущим днем
         weekManager = WeekManager(weekDays, weekYearTV, weekTypeTV).apply {
             setSelectedDayOfWeek(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
             weekDays[getCurrentDayIndex()].performClick()
@@ -111,14 +115,33 @@ class ScheduleFragment : Fragment() {
 
     private fun getLessonsForDay(dayOfWeek: Int, weekType: String): List<Lesson> {
         val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
-        val filteredLessons = LessonsRepository.lessons.filter {
+        val realLessons = LessonsRepository.lessons.filter {
             it.dayOfWeek == dayOfWeek && (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе")
         }
-        Log.d(
-            "ScheduleFragment",
-            "Filtered lessons for day $dayOfWeek and weekType $normalizedWeekType: $filteredLessons"
-        )
-        return filteredLessons
+
+        // Если нет реальных пар - возвращаем пустой список
+        if (realLessons.isEmpty()) return emptyList()
+
+        val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val showEmptyLessons = sharedPrefs.getBoolean("show_empty_lessons", false)
+
+        // Если не показываем пустые пары - возвращаем только реальные
+        if (!showEmptyLessons) return realLessons
+
+        // Получаем номера реальных пар
+        val realLessonNumbers = realLessons.map { it.number }.toSet()
+
+        // Все возможные номера пар
+        val allLessonNumbers = listOf("1-я пара", "2-я пара", "3-я пара", "4-я пара", "5-я пара")
+
+        // Создаем список всех пар (реальных и пустых)
+        return allLessonNumbers.map { number ->
+            if (number in realLessonNumbers) {
+                realLessons.first { it.number == number }
+            } else {
+                Lesson.createEmptyLesson(number, dayOfWeek, weekType)
+            }
+        }
     }
 
     private fun getNumberOfLessonsForDay(dayOfMonth: Int, month: Int, year: Int): Int {
@@ -129,8 +152,11 @@ class ScheduleFragment : Fragment() {
         val weekType = weekManager?.getCurrentWeekType() ?: "Верхняя неделя"
         val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
 
+        // Считаем только реальные пары, игнорируя пустые
         return LessonsRepository.lessons.count {
-            it.dayOfWeek == dayOfWeek && (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе")
+            it.dayOfWeek == dayOfWeek &&
+                    (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе") &&
+                    !it.isEmptyLesson
         }
     }
 
@@ -172,5 +198,21 @@ class ScheduleFragment : Fragment() {
 
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+
+        // Проверяем изменения компактного вида
+        val newCompactViewSetting = sharedPrefs.getBoolean("compact_view_enabled", false)
+        if (newCompactViewSetting != isCompactView) {
+            isCompactView = newCompactViewSetting
+            lessonsAdapter = LessonsAdapter(lessonsAdapter.lessons, requireContext(), findNavController(), isCompactView)
+            lessonsList.adapter = lessonsAdapter
+        }
+
+        // Проверяем изменения отображения пустых пар
+        updateData()
     }
 }
