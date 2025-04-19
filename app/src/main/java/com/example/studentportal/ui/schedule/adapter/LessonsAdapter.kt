@@ -1,5 +1,6 @@
 package com.example.studentportal.ui.schedule.adapter
 
+import Lesson
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
-import com.example.studentportal.data.model.Lesson
 import com.example.studentportal.ui.schedule.ScheduleFragmentDirections
 
 class LessonsAdapter(
@@ -41,6 +41,7 @@ class LessonsAdapter(
         val audience: TextView = view.findViewById(R.id.lesson_list_audience)
         val teacher: TextView = view.findViewById(R.id.lesson_list_teacher)
         val btn: LinearLayout = view.findViewById(R.id.lesson_button)
+        val subgroup: TextView = view.findViewById(R.id.lesson_list_subgroup)
     }
 
     class CompactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -49,6 +50,7 @@ class LessonsAdapter(
         val number: TextView = view.findViewById(R.id.lesson_list_number_compact)
         val time: TextView = view.findViewById(R.id.lesson_list_time_compact)
         val btn: LinearLayout = view.findViewById(R.id.lesson_button)
+        val subgroup: TextView = view.findViewById(R.id.lesson_list_subgroup_compact)
     }
 
     class EmptyLessonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -98,6 +100,18 @@ class LessonsAdapter(
                 holder.type.text = lesson.type
                 holder.number.text = lesson.number
 
+                when (lesson.subgroup) {
+                    "1" -> {
+                        holder.subgroup.visibility = View.VISIBLE
+                        holder.subgroup.text = "1 подгруппа"
+                    }
+                    "2" -> {
+                        holder.subgroup.visibility = View.VISIBLE
+                        holder.subgroup.text = "2 подгруппа"
+                    }
+                    else -> holder.subgroup.visibility = View.GONE
+                }
+
                 holder.btn.setOnClickListener {
                     navigateToLessonDetail(lesson)
                 }
@@ -107,6 +121,18 @@ class LessonsAdapter(
                 holder.time.text = lesson.time
                 holder.number.text = lesson.number
                 holder.typeAndAudience.text = "${lesson.type} в ${lesson.audience} аудитории"
+
+                when (lesson.subgroup) {
+                    "1" -> {
+                        holder.subgroup.visibility = View.VISIBLE
+                        holder.subgroup.text = "1 подгруппа"
+                    }
+                    "2" -> {
+                        holder.subgroup.visibility = View.VISIBLE
+                        holder.subgroup.text = "2 подгруппа"
+                    }
+                    else -> holder.subgroup.visibility = View.GONE
+                }
 
                 holder.btn.setOnClickListener {
                     navigateToLessonDetail(lesson)

@@ -37,4 +37,5 @@
     <string name="shedule1">Расписание</string>
     <string name="up_week">Верхняя неделя</string>
     <string name="type_audience">Type + audience</string>
+    <string name="subgroup">Number of subgroup</string>
 </resources>

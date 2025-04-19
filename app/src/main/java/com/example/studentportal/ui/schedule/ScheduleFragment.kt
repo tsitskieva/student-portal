@@ -1,5 +1,6 @@
 package com.example.studentportal.ui.schedule
 
+import Lesson
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
-import com.example.studentportal.data.model.Lesson
 import com.example.studentportal.data.repository.LessonsRepository
 import com.example.studentportal.ui.schedule.adapter.LessonsAdapter
 import com.example.studentportal.ui.utils.WeekManager

@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <LinearLayout
@@ -61,6 +61,17 @@
                 android:text="@string/title"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/lesson_list_subgroup_compact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/raleway_medium"
+                android:text="@string/subgroup"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/lesson_list_number_compact"
