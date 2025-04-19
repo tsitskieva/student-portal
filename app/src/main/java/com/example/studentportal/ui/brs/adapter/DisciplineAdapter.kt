@@ -13,7 +13,8 @@ import com.example.studentportal.data.model.Discipline
 
 class DisciplineAdapter(
     private var items: List<Discipline>,
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (Int) -> Unit,
+    private var showProgressIndicator: Boolean
 ) :
     RecyclerView.Adapter<DisciplineAdapter.ViewHolder>() {
 
@@ -31,6 +32,7 @@ class DisciplineAdapter(
         val currentScore: TextView = view.findViewById(R.id.tvCurrentScore)
         val maxScore: TextView = view.findViewById(R.id.tvMaxScore)
         val progressIndicator: View = view.findViewById(R.id.progressIndicator)
+        val progressContainer: LinearLayout = view.findViewById(R.id.progressContainer)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,7 +41,7 @@ class DisciplineAdapter(
         return ViewHolder(view)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "UseKtx")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.title.text = item.name
@@ -58,28 +60,40 @@ class DisciplineAdapter(
             else -> 0.03f
         }
 
-        val params = holder.progressIndicator.layoutParams as LinearLayout.LayoutParams
-        params.weight = progress
-        holder.progressIndicator.layoutParams = params
-        holder.progressIndicator.requestLayout()
+        if (showProgressIndicator) {
+            val params = holder.progressIndicator.layoutParams as LinearLayout.LayoutParams
+            params.weight = progress
+            holder.progressIndicator.layoutParams = params
+            holder.progressIndicator.requestLayout()
 
-        val color = when {
-            maxScore <= 60 -> when {
-                currentScore < 38 -> "#FF4444"
-                currentScore < 45 -> "#FFC107"
-                else -> "#4CAF50"
+            val color = when {
+                maxScore <= 60 -> when {
+                    currentScore < 38 -> "#FF4444"
+                    currentScore < 45 -> "#FFC107"
+                    else -> "#4CAF50"
+                }
+
+                else -> when {
+                    currentScore < 60 -> "#FF4444"
+                    currentScore < 70 -> "#FFC107"
+                    else -> "#4CAF50"
+                }
             }
 
-            else -> when {
-                currentScore < 60 -> "#FF4444"
-                currentScore < 70 -> "#FFC107"
-                else -> "#4CAF50"
-            }
+            holder.progressIndicator.setBackgroundColor(Color.parseColor(color))
+            holder.progressContainer.visibility = View.VISIBLE
+        } else {
+            holder.progressContainer.visibility = View.GONE
         }
 
-        holder.progressIndicator.setBackgroundColor(Color.parseColor(color))
         holder.itemView.setOnClickListener { onItemClick(item.id) }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateProgressVisibility(show: Boolean) {
+        showProgressIndicator = show
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = items.size

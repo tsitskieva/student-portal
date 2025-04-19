@@ -1,10 +1,8 @@
 package com.example.studentportal.ui.brs
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,6 +62,12 @@ class BRSFragment : Fragment() {
             }
         }
 
+        sharedViewModel.indicatorVisibility.observe(viewLifecycleOwner) { isVisible ->
+            (binding.recyclerViewDisciplines.adapter as? DisciplineAdapter)?.updateProgressVisibility(
+                isVisible
+            )
+        }
+
         setupRecyclerView()
         setupObservers()
         setupUI()
@@ -94,13 +98,15 @@ class BRSFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val showIndicator = sharedPrefs.getBoolean("show_indicator_brs", true)
         binding.recyclerViewDisciplines.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = DisciplineAdapter(emptyList()) { disciplineId ->
+            adapter = DisciplineAdapter(emptyList(), { disciplineId ->
                 findNavController().navigate(
                     BRSFragmentDirections.actionBrsToDetail(disciplineId)
                 )
-            }
+            }, showIndicator)
         }
     }
 
@@ -168,7 +174,8 @@ class BRSFragment : Fragment() {
 
     private fun setupSemesterSpinner(semesters: List<Semester>) {
         this.semesters = semesters
-        binding.semesterSelector.root.visibility = if (semesters.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.semesterSelector.root.visibility =
+            if (semesters.isNotEmpty()) View.VISIBLE else View.GONE
         currentSemesterIndex = viewModel.spinnerPosition.value ?: 0
         updateSemesterDisplay()
     }
@@ -216,10 +223,4 @@ class BRSFragment : Fragment() {
         super.onResume()
     }
 
-    private fun clearUI() {
-        binding.recyclerViewDisciplines.visibility = View.GONE
-        binding.tvEmpty.visibility = View.GONE
-        semesters = emptyList()
-        setupSemesterSpinner(emptyList())
-    }
 }

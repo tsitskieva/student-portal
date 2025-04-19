@@ -97,6 +97,7 @@
         </LinearLayout>
         <!-- Прогресс-бар -->
         <LinearLayout
+            android:id="@+id/progressContainer"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@drawable/bg_progress_track"

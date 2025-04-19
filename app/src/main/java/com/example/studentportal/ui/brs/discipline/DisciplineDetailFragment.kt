@@ -1,6 +1,7 @@
 package com.example.studentportal.ui.brs.discipline
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
@@ -13,16 +14,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.studentportal.R
 import com.example.studentportal.data.model.Module
 import com.example.studentportal.databinding.FragmentDisciplineDetailBinding
+import com.example.studentportal.ui.brs.SharedViewModel
 import com.example.studentportal.ui.brs.adapter.ModuleAdapter
 
 class DisciplineDetailFragment : Fragment() {
     private lateinit var binding: FragmentDisciplineDetailBinding
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val viewModel: DisciplineDetailViewModel by viewModels {
         DisciplineDetailViewModelFactory(requireContext().applicationContext)
     }
@@ -49,9 +53,13 @@ class DisciplineDetailFragment : Fragment() {
         viewModel.loadDisciplineDetails(disciplineId)
         observeViewModel()
         setupScrollBehavior()
+
+        sharedViewModel.indicatorVisibility.observe(viewLifecycleOwner) { isVisible ->
+            updateProgressIndicatorsVisibility(isVisible)
+        }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "UseKtx")
     private fun observeViewModel() {
         viewModel.disciplineDetails.observe(viewLifecycleOwner) { details ->
             if (details == null) {
@@ -66,9 +74,14 @@ class DisciplineDetailFragment : Fragment() {
                 tvTitle.text = details.name
                 tvFixedCurrentScore.text = details.score.toString()
                 tvFixedMaxScore.text = details.maxScore.toString()
-                rvModules.adapter = ModuleAdapter(details.modules)
 
                 val finalView = binding.finalRatingCard.findViewById<View>(R.id.included_submodule_final)
+
+                val showIndicator = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+                    .getBoolean("show_indicator_brs", true)
+                rvModules.adapter = ModuleAdapter(details.modules, showIndicator)
+
+                updateProgressIndicatorsVisibility(showIndicator)
 
                 finalView.findViewById<TextView>(R.id.tvCurrentScore).text = total.toString()
                 finalView.findViewById<TextView>(R.id.tvMaxScore).text = maxTotal.toString()
@@ -118,8 +131,24 @@ class DisciplineDetailFragment : Fragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    private fun updateProgressIndicatorsVisibility(show: Boolean) {
+        binding.progressIndicatorFixed.visibility = if (show) View.VISIBLE else View.GONE
+
+        binding.includedSubmoduleFinal.root.findViewById<View>(R.id.progressContainer)?.visibility =
+            if (show) View.VISIBLE else View.GONE
+
+        binding.examCard.findViewById<View>(R.id.progressContainer)?.visibility =
+            if (show) View.VISIBLE else View.GONE
+        binding.admissionCard.findViewById<View>(R.id.progressContainer)?.visibility =
+            if (show) View.VISIBLE else View.GONE
+
+        (binding.rvModules.adapter as? ModuleAdapter)?.updateProgressVisibility(show)
+    }
+
+    @SuppressLint("SetTextI18n", "UseKtx")
     private fun showExamCard(exam: Module) {
+        val showIndicator = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+            .getBoolean("show_indicator_brs", true)
         binding.examCard.apply {
             visibility = View.VISIBLE
             val examView = findViewById<View>(R.id.included_submodule_exam)
@@ -142,6 +171,7 @@ class DisciplineDetailFragment : Fragment() {
             val params = progressView.layoutParams as LinearLayout.LayoutParams
             params.weight = progress
             progressView.layoutParams = params
+            progressView.visibility = if (showIndicator) View.VISIBLE else View.GONE
 
             val color = when {
                 maxScore == 0 || totalScore == 0 -> Color.parseColor("#FF4444")
@@ -150,6 +180,8 @@ class DisciplineDetailFragment : Fragment() {
                 else -> Color.parseColor("#4CAF50")
             }
             progressView.setBackgroundColor(color)
+            findViewById<View>(R.id.progressContainer)?.visibility =
+                if (showIndicator) View.VISIBLE else View.GONE
         }
     }
 
@@ -178,8 +210,10 @@ class DisciplineDetailFragment : Fragment() {
         return Triple(totalScore, maxTotalScore, Pair(admissionScore, admissionMax))
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "UseKtx")
     private fun showAdmissionCard(admissionScore: Int, admissionMax: Int) {
+        val showIndicator = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+            .getBoolean("show_indicator_brs", true)
         binding.admissionCard.apply {
             visibility = View.VISIBLE
             val admissionView = findViewById<View>(R.id.included_submodule_admission)
@@ -200,6 +234,7 @@ class DisciplineDetailFragment : Fragment() {
             val params = progressView.layoutParams as LinearLayout.LayoutParams
             params.weight = progress
             progressView.layoutParams = params
+            progressView.visibility = if (showIndicator) View.VISIBLE else View.GONE
 
             val color = when {
                 admissionMax == 0 || admissionScore == 0 -> "#FF4444"
@@ -208,6 +243,8 @@ class DisciplineDetailFragment : Fragment() {
                 else -> "#4CAF50"
             }
             progressView.setBackgroundColor(Color.parseColor(color))
+            findViewById<View>(R.id.progressContainer)?.visibility =
+                if (showIndicator) View.VISIBLE else View.GONE
         }
     }
 
@@ -221,6 +258,7 @@ class DisciplineDetailFragment : Fragment() {
         }
     }
 
+    @SuppressLint("UseKtx")
     private fun updateFixedScoreVisibility() {
         val scrollView = binding.nestedScrollView
         val child = scrollView.getChildAt(0)

@@ -1,5 +1,7 @@
 package com.example.studentportal.ui.profile
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -10,30 +12,31 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.example.studentportal.R
+import com.example.studentportal.ui.brs.SharedViewModel
 import com.example.studentportal.ui.profile.managers.SelectedBrsManager
 import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.utils.InputFilterMinMax
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var emptyLessonsSwitch: Switch
     private lateinit var sharedPrefs: SharedPreferences
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var notificationsSwitch: Switch
     private lateinit var notificationsSettingsContainer: ConstraintLayout
     private lateinit var numberOfGroup: TextView
     private lateinit var numberOfBrs: TextView
     private lateinit var hoursEditText: EditText
     private lateinit var minutesEditText: EditText
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var compactViewSwitch: Switch
-
-    private val startForResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        updateCounters()
-    }
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private lateinit var switchIndicatorBrs: Switch
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +49,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         updateCounters()
         setupCompactViewSwitch()
         setupEmptyLessonsSwitch()
+        setupIndicatorBrsSwitch()
     }
 
     private fun initializeViews(view: View) {
@@ -57,12 +61,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         notificationsSettingsContainer = view.findViewById(R.id.notifications_lesson_container_settings)
         hoursEditText = view.findViewById(R.id.hours_before_notification_lesson)
         minutesEditText = view.findViewById(R.id.minutes_before_notification_lesson)
+        switchIndicatorBrs = view.findViewById(R.id.switch_indicator_brs)
     }
 
     private fun setupSharedPreferences() {
         sharedPrefs = requireContext().getSharedPreferences(
             "AppSettings",
-            android.content.Context.MODE_PRIVATE
+            Context.MODE_PRIVATE
         )
     }
 
@@ -76,6 +81,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    @SuppressLint("UseKtx")
     private fun setupNotificationSwitch() {
         val isNotificationsEnabled = sharedPrefs.getBoolean("notifications_enabled", false)
         notificationsSwitch.isChecked = isNotificationsEnabled
@@ -84,6 +90,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             sharedPrefs.edit().putBoolean("notifications_enabled", isChecked).apply()
             handleNotificationsContainerVisibility(isChecked)
+        }
+    }
+
+    @SuppressLint("UseKtx")
+    private fun setupIndicatorBrsSwitch() {
+        val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val showIndicator = sharedPrefs.getBoolean("show_indicator_brs", true)
+        switchIndicatorBrs.isChecked = showIndicator
+
+        switchIndicatorBrs.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("show_indicator_brs", isChecked).apply()
+            // Уведомляем SharedViewModel о изменении
+            sharedViewModel.updateIndicatorVisibility(isChecked)
         }
     }
 
@@ -108,6 +127,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         return object : TextWatcher {
             private var isEditing = false
 
+            @SuppressLint("UseKtx")
             override fun afterTextChanged(s: Editable?) {
                 if (isEditing) return
                 val value = s.toString().toIntOrNull() ?: 0
@@ -184,6 +204,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         saveCurrentTimeValues()
     }
 
+    @SuppressLint("UseKtx")
     private fun saveCurrentTimeValues() {
         val hours = hoursEditText.text.toString().toIntOrNull() ?: 0
         val minutes = minutesEditText.text.toString().toIntOrNull() ?: 0
@@ -194,6 +215,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             .apply()
     }
 
+    @SuppressLint("UseKtx")
     private fun setupCompactViewSwitch() {
         val isCompactView = sharedPrefs.getBoolean("compact_view_enabled", false)
         compactViewSwitch.isChecked = isCompactView
@@ -203,6 +225,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    @SuppressLint("UseKtx")
     private fun setupEmptyLessonsSwitch() {
         val showEmptyLessons = sharedPrefs.getBoolean("show_empty_lessons", false)
         emptyLessonsSwitch.isChecked = showEmptyLessons
