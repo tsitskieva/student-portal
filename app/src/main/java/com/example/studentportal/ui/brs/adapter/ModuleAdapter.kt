@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
 import com.example.studentportal.data.model.Module
 
-class ModuleAdapter(private val modules: List<Module>) :
+class ModuleAdapter(private val modules: List<Module>, private var showProgressIndicator: Boolean) :
     RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
 
     private val filteredModules = modules.filter { it.type != "EXAM" }
@@ -22,14 +22,20 @@ class ModuleAdapter(private val modules: List<Module>) :
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(filteredModules[position])
+        holder.bind(filteredModules[position], showProgressIndicator)
     }
 
     override fun getItemCount() = modules.size
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateProgressVisibility(show: Boolean) {
+        showProgressIndicator = show
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        @SuppressLint("SetTextI18n")
-        fun bind(module: Module) {
+        @SuppressLint("SetTextI18n", "MissingInflatedId", "UseKtx")
+        fun bind(module: Module, showProgressIndicator: Boolean) {
             val context = itemView.context
             val tvModuleTitle = itemView.findViewById<TextView>(R.id.tvModuleTitle)
             val llSubmodules = itemView.findViewById<LinearLayout>(R.id.llSubmodules)
@@ -50,9 +56,18 @@ class ModuleAdapter(private val modules: List<Module>) :
                     view.findViewById<TextView>(R.id.tvCurrentScore).text = sub.score.toString()
                     view.findViewById<TextView>(R.id.tvMaxScore).text = sub.maxScore.toString()
 
+
                     val progressView = view.findViewById<View>(R.id.progressIndicator)
                     val maxScore = sub.maxScore.toFloat()
                     val currentScore = sub.score.toFloat()
+                    val progressContainer = view.findViewById<View>(R.id.progressContainer)
+                    progressContainer.visibility = if (showProgressIndicator) View.VISIBLE else View.GONE
+
+                    if (showProgressIndicator && maxScore > 0 && currentScore >= 0) {
+                        progressView.visibility = View.VISIBLE
+                    } else {
+                        progressView.visibility = View.GONE
+                    }
 
                     if (maxScore > 0 && currentScore >= 0) {
                         val progress = if (currentScore == 0f) 0.01f else currentScore / maxScore
