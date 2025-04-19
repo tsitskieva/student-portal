@@ -63,17 +63,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/lesson_list_subgroup_compact"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/raleway_medium"
-                android:text="@string/subgroup"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:visibility="gone"/>
-
-            <TextView
                 android:id="@+id/lesson_list_number_compact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
