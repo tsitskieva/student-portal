@@ -43,6 +43,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:fontFeatureSettings="lnum"
             android:id="@+id/tvSemesterNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,6 +60,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
+            android:fontFeatureSettings="lnum"
             android:id="@+id/tvCourse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,6 +78,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
+            android:fontFeatureSettings="lnum"
             android:id="@+id/tvYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

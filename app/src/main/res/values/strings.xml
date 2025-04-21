@@ -38,4 +38,5 @@
     <string name="up_week">Верхняя неделя</string>
     <string name="type_audience">Type + audience</string>
     <string name="subgroup">Number of subgroup</string>
+    <string name="underlined_text"><u>Добавить группу</u></string>
 </resources>

@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_rounded"
     android:paddingVertical="13dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="10dp"
+    android:id="@+id/group_item_container">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,23 +26,25 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:fontFeatureSettings="lnum"
                 android:id="@+id/group_list_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_semibold"
-                android:text="Number of direction"
+                android:text="Number of group"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:textSize="19sp" />
 
             <TextView
+                android:fontFeatureSettings="lnum"
                 android:id="@+id/group_list_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:fontFamily="@font/raleway"
-                android:text="Number of group"
+                android:text="Number of direction"
                 android:textColor="#777883"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -50,9 +53,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_plus"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="-10dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

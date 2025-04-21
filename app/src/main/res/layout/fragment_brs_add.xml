@@ -79,6 +79,7 @@
                 android:layout_marginHorizontal="16dp">
 
                 <EditText
+                    android:fontFeatureSettings="lnum"
                     android:id="@+id/name_of_brs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,6 +123,7 @@
                 android:layout_marginHorizontal="16dp">
 
                 <EditText
+                    android:fontFeatureSettings="lnum"
                     android:id="@+id/code_of_brs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

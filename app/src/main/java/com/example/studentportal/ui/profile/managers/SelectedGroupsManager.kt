@@ -1,11 +1,15 @@
 package com.example.studentportal.ui.profile.managers
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.studentportal.data.model.Group
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object SelectedGroupsManager {
+    private val _activeGroupChanged = MutableLiveData<Unit>()
+    val activeGroupChanged: LiveData<Unit> = _activeGroupChanged
     private const val PREFS_NAME = "SelectedGroupsPrefs"
     private const val SELECTED_GROUPS_KEY = "selected_groups"
     private const val ACTIVE_GROUP_KEY = "active_group"
@@ -27,6 +31,8 @@ object SelectedGroupsManager {
                 saveActiveGroup(context, groups[0].direction, groups[0].group)
             }
         }
+
+        _activeGroupChanged.postValue(Unit)
     }
 
     fun getSelectedGroups(context: Context): List<Group> {

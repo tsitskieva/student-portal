@@ -128,13 +128,25 @@ class GroupsAllListFragment : Fragment() {
             }
         } else {
             allGroups.filter {
-                (it.direction.contains(query, ignoreCase = true) ||
-                        it.group.contains(query, ignoreCase = true)) &&
+                it.group.contains(query, ignoreCase = true) &&
                         !selectedGroups.any { selected ->
                             selected.direction == it.direction && selected.group == it.group
                         }
             }
         }
+
         adapter.updateList(filteredList)
+
+        // Показываем/скрываем состояние "Ничего не найдено"
+        val nothingFoundContainer = view?.findViewById<View>(R.id.nothing_found_state_group_container)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.list_of_all_groups)
+
+        if (filteredList.isEmpty() && query.isNotEmpty()) {
+            nothingFoundContainer?.visibility = View.VISIBLE
+            recyclerView?.visibility = View.GONE
+        } else {
+            nothingFoundContainer?.visibility = View.GONE
+            recyclerView?.visibility = View.VISIBLE
+        }
     }
 }

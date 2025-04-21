@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
 import com.example.studentportal.data.repository.LessonsRepository
+import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.schedule.adapter.LessonsAdapter
 import com.example.studentportal.ui.utils.WeekManager
 import java.util.Calendar
@@ -30,6 +31,9 @@ class ScheduleFragment : Fragment() {
     private var weekManager: WeekManager? = null
     private lateinit var lessonsList: RecyclerView
     private lateinit var lessonsAdapter: LessonsAdapter
+    private lateinit var noChosenGroupContainer: ConstraintLayout
+    private lateinit var noLessonGroupContainer: ConstraintLayout
+    private lateinit var addGroupButton: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +45,13 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        noLessonGroupContainer = view.findViewById(R.id.empty_state_lesson_container)
+        noChosenGroupContainer = view.findViewById(R.id.no_choosen_state_group_container)
+        addGroupButton = view.findViewById(R.id.addGroup1)
+
+        addGroupButton.setOnClickListener {
+            findNavController().navigate(R.id.action_scheduleFragment_to_groupsSettings)
+        }
 
         val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
         isCompactView = sharedPrefs.getBoolean("compact_view_enabled", false)
@@ -88,10 +99,25 @@ class ScheduleFragment : Fragment() {
         }
 
         updateData()
-        updateEmptyStateVisibility(lessonsAdapter.itemCount == 0)
+
+        parentFragmentManager.setFragmentResultListener("active_group_changed", viewLifecycleOwner) { _, _ ->
+            updateData()
+        }
     }
 
     private fun updateData() {
+        val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
+
+        if (activeGroup == null) {
+            // Нет активной группы - показываем состояние "Добавить группу"
+            showNoGroupState()
+            return
+        } else {
+            // Есть активная группа - скрываем контейнер "Добавить группу"
+            noChosenGroupContainer.visibility = View.GONE
+            lessonsList.visibility = View.VISIBLE
+        }
+
         updateDotsUnderDays()
         updateLessonsForSelectedDay()
     }
@@ -101,22 +127,42 @@ class ScheduleFragment : Fragment() {
         val lessons = weekManager?.let {
             getLessonsForDay(it.getSelectedDayOfWeek(), it.getCurrentWeekType())
         } ?: emptyList()
+
         lessonsAdapter.lessons = lessons
         lessonsAdapter.notifyDataSetChanged()
-        updateEmptyStateVisibility(lessons.isEmpty())
+
+        // Обновляем состояние видимости контейнеров
+        updateContainersVisibility(lessons.isEmpty())
     }
 
-    private fun updateEmptyStateVisibility(isEmpty: Boolean) {
-        view?.findViewById<ConstraintLayout>(R.id.empty_state_lesson_container)?.visibility =
-            if (isEmpty) View.VISIBLE else View.GONE
-        view?.findViewById<RecyclerView>(R.id.lessons_list)?.visibility =
-            if (isEmpty) View.GONE else View.VISIBLE
+    private fun updateContainersVisibility(isEmpty: Boolean) {
+        if (isEmpty) {
+            // Если пар нет - показываем контейнер "Нет пар"
+            noLessonGroupContainer.visibility = View.VISIBLE
+            lessonsList.visibility = View.GONE
+        } else {
+            // Если пары есть - показываем список
+            noLessonGroupContainer.visibility = View.GONE
+            lessonsList.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showNoGroupState() {
+        noChosenGroupContainer.visibility = View.VISIBLE
+        lessonsList.visibility = View.GONE
+        noLessonGroupContainer.visibility = View.GONE
     }
 
     private fun getLessonsForDay(dayOfWeek: Int, weekType: String): List<Lesson> {
+
+        val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
+            ?: return emptyList()
+
         val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
         val realLessons = LessonsRepository.lessons.filter {
-            it.dayOfWeek == dayOfWeek && (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе")
+            it.dayOfWeek == dayOfWeek &&
+                    (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе") &&
+                    it.group == activeGroup.group
         }
 
         // Если нет реальных пар - возвращаем пустой список
@@ -145,6 +191,9 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun getNumberOfLessonsForDay(dayOfMonth: Int, month: Int, year: Int): Int {
+        val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
+            ?: return 0
+
         val calendar = Calendar.getInstance().apply {
             set(year, month, dayOfMonth)
         }
@@ -152,11 +201,11 @@ class ScheduleFragment : Fragment() {
         val weekType = weekManager?.getCurrentWeekType() ?: "Верхняя неделя"
         val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
 
-        // Считаем только реальные пары, игнорируя пустые
         return LessonsRepository.lessons.count {
             it.dayOfWeek == dayOfWeek &&
                     (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе") &&
-                    !it.isEmptyLesson
+                    !it.isEmptyLesson &&
+                    it.group == activeGroup.group
         }
     }
 

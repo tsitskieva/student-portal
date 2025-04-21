@@ -20,19 +20,40 @@ class SelectedGroupsAdapter(
     private val onDeleteClick: (Group) -> Unit
 ) : RecyclerView.Adapter<SelectedGroupsAdapter.SelectedGroupViewHolder>() {
 
+    private var lastDeletedPosition = -1
+    private var lastDeletedGroup: Group? = null
+    private var isAnimating = false
+
     inner class SelectedGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val directionText: TextView = itemView.findViewById(R.id.group_list_text1)
-        val groupText: TextView = itemView.findViewById(R.id.group_list_text2)
+        val directionText: TextView = itemView.findViewById(R.id.group_list_text2)
+        val groupText: TextView = itemView.findViewById(R.id.group_list_text1)
         val onButton: ImageView = itemView.findViewById(R.id.group_list_button_on)
         val offButton: ImageView = itemView.findViewById(R.id.group_list_button_off)
         val activeLine: ImageView = itemView.findViewById(R.id.group_list_line_active)
         val inactiveLine: ImageView = itemView.findViewById(R.id.group_list_line_not_active)
+        val container: View = itemView.findViewById(R.id.group_item_container1)
 
         init {
             offButton.setOnClickListener {
-                groups.forEach { it.isActive = false }
-                groups[adapterPosition].isActive = true
-                onItemClick(groups[adapterPosition])
+                if (isAnimating) return@setOnClickListener
+
+                // Анимация переключения активности
+                container.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(100)
+                    .withEndAction {
+                        container.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start()
+
+                        groups.forEach { it.isActive = false }
+                        groups[adapterPosition].isActive = true
+                        onItemClick(groups[adapterPosition])
+                    }
+                    .start()
             }
         }
     }
@@ -46,6 +67,12 @@ class SelectedGroupsAdapter(
     override fun onBindViewHolder(holder: SelectedGroupViewHolder, position: Int) {
         val currentItem = groups[position]
 
+        holder.itemView.alpha = 1f
+        holder.itemView.translationX = 0f
+        holder.itemView.translationY = 0f
+        holder.container.scaleX = 1f
+        holder.container.scaleY = 1f
+
         holder.directionText.text = currentItem.direction
         holder.groupText.text = currentItem.group
 
@@ -54,6 +81,12 @@ class SelectedGroupsAdapter(
             holder.offButton.visibility = View.GONE
             holder.activeLine.visibility = View.VISIBLE
             holder.inactiveLine.visibility = View.GONE
+
+            holder.container.animate()
+                .scaleX(1.02f)
+                .scaleY(1.02f)
+                .setDuration(200)
+                .start()
         } else {
             holder.onButton.visibility = View.GONE
             holder.offButton.visibility = View.VISIBLE
@@ -90,6 +123,18 @@ class SelectedGroupsAdapter(
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                lastDeletedPosition = viewHolder.adapterPosition
+                lastDeletedGroup = groups[lastDeletedPosition]
+
+                // Анимация удаления с эффектом "исчезновения"
+                viewHolder.itemView.animate()
+                    .alpha(0f)
+                    .translationX(-viewHolder.itemView.width.toFloat())
+                    .setDuration(300)
+                    .withEndAction {
+                        onDeleteClick(lastDeletedGroup!!)
+                    }
+                    .start()
                 val position = viewHolder.adapterPosition
                 val groupToDelete = groups[position]
                 onDeleteClick(groupToDelete)
@@ -113,6 +158,10 @@ class SelectedGroupsAdapter(
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Анимация прозрачности при свайпе
+                    viewHolder.itemView.alpha = 1 - Math.abs(dX) / viewHolder.itemView.width
+                }
                 val itemView = viewHolder.itemView
                 val itemHeight = itemView.bottom - itemView.top
                 val isCanceled = dX == 0f && !isCurrentlyActive
@@ -176,6 +225,7 @@ class SelectedGroupsAdapter(
                 isFirstThresholdPassed = false
                 firstThreshold = 0f
                 originalDx = 0f
+                viewHolder.itemView.alpha = 1f
             }
 
             private fun clearCanvas(c: Canvas?) {

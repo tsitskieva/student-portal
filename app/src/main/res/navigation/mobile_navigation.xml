@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_scheduleFragment_to_lessonFragment"
             app:destination="@id/lessonFragment" />
+        <action
+            android:id="@+id/action_scheduleFragment_to_groupsSettings"
+            app:destination="@id/groupsSettingsFragment" />
     </fragment>
 
     <fragment

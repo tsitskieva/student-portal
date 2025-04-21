@@ -1,5 +1,6 @@
 package com.example.studentportal.ui.profile
 
+import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,9 +30,9 @@ class GroupsSettingsFragment : Fragment() {
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == android.app.Activity.RESULT_OK) {
+        if (result.resultCode == Activity.RESULT_OK) {
             updateGroupsList()
-            requireActivity().setResult(android.app.Activity.RESULT_OK)
+            requireActivity().setResult(Activity.RESULT_OK)
             updateEmptyState()
         }
     }
@@ -48,44 +50,66 @@ class GroupsSettingsFragment : Fragment() {
 
         selectedGroups = SelectedGroupsManager.getSelectedGroups(requireContext()).toMutableList()
 
-        initRecyclerView(view)
-        setupBackButton(view)
-        setupAddButton(view)
+        initViews(view)
+        setupRecyclerView()
+        setupButtons(view)
         updateEmptyState()
     }
 
-    private fun initRecyclerView(view: View) {
+    private fun initViews(view: View) {
         recyclerView = view.findViewById(R.id.list_of_choosen_groups)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         emptyStateContainer = view.findViewById(R.id.empty_state_group_container)
+    }
+
+    private fun setupRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         selectedGroupsAdapter = SelectedGroupsAdapter(
             selectedGroups,
-            onItemClick = { clickedGroup ->
-                selectedGroups.forEach { it.isActive = false }
-                clickedGroup.isActive = true
-                SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
-                selectedGroupsAdapter.updateList(selectedGroups)
-                requireActivity().setResult(android.app.Activity.RESULT_OK)
-                updateEmptyState()
-            },
-            onDeleteClick = { groupToDelete ->
-                val isDeletingActive = groupToDelete.isActive
-                selectedGroups.remove(groupToDelete)
-
-                if (isDeletingActive && selectedGroups.isNotEmpty()) {
-                    selectedGroups[0].isActive = true
-                }
-
-                SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
-                updateGroupsList()
-                requireActivity().setResult(android.app.Activity.RESULT_OK)
-                updateEmptyState()
-            }
+            onItemClick = ::handleGroupSelection,
+            onDeleteClick = ::handleGroupDeletion
         )
 
         recyclerView.adapter = selectedGroupsAdapter
         selectedGroupsAdapter.setupSwipeToDelete(recyclerView)
+    }
+
+    private fun handleGroupSelection(clickedGroup: Group) {
+        selectedGroups.forEach { it.isActive = false }
+        clickedGroup.isActive = true
+
+        selectedGroupsAdapter.updateList(selectedGroups)
+        SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
+        requireActivity().setResult(Activity.RESULT_OK)
+        updateEmptyState()
+        notifyActiveGroupChanged()
+    }
+
+    private fun handleGroupDeletion(groupToDelete: Group) {
+        val wasActive = groupToDelete.isActive
+        selectedGroups.remove(groupToDelete)
+
+        if (wasActive && selectedGroups.isNotEmpty()) {
+            selectedGroups[0].isActive = true
+        }
+
+        selectedGroupsAdapter.updateList(selectedGroups)
+        SelectedGroupsManager.saveSelectedGroups(requireContext(), selectedGroups)
+        requireActivity().setResult(Activity.RESULT_OK)
+        updateEmptyState()
+        notifyActiveGroupChanged()
+    }
+
+    private fun notifyActiveGroupChanged() {
+        parentFragmentManager.setFragmentResult(
+            "active_group_changed",
+            bundleOf("group_changed" to true)
+        )
+    }
+
+    private fun setupButtons(view: View) {
+        setupBackButton(view)
+        setupAddButton(view)
     }
 
     private fun setupBackButton(view: View) {
@@ -106,8 +130,7 @@ class GroupsSettingsFragment : Fragment() {
     }
 
     private fun setupAddButton(view: View) {
-        val buttonToList = view.findViewById<Button>(R.id.button_to_list_of_groups)
-        buttonToList.setOnClickListener {
+        view.findViewById<Button>(R.id.button_to_list_of_groups).setOnClickListener {
             findNavController().navigate(R.id.action_groupsSettings_to_groupsAllList)
         }
     }

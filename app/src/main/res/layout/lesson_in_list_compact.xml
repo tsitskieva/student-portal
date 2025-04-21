@@ -41,6 +41,7 @@
                     tools:ignore="ContentDescription,RtlSymmetry" />
 
                 <TextView
+                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_list_type_and_audience_compact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,6 +54,7 @@
             </LinearLayout>
 
             <TextView
+                android:fontFeatureSettings="lnum"
                 android:id="@+id/lesson_list_title_compact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,6 +65,7 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:fontFeatureSettings="lnum"
                 android:id="@+id/lesson_list_number_compact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,6 +93,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:fontFeatureSettings="lnum"
                 android:id="@+id/lesson_list_time_compact"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

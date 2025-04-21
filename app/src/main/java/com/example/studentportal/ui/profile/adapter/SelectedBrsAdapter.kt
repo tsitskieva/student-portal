@@ -20,18 +20,37 @@ class SelectedBrsAdapter(
     private val onDeleteClick: (Brs) -> Unit
 ) : RecyclerView.Adapter<SelectedBrsAdapter.SelectedBrsViewHolder>() {
 
+    private var isAnimating = false
+
     inner class SelectedBrsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val brsText: TextView = itemView.findViewById(R.id.brs_list_text)
         val onButton: ImageView = itemView.findViewById(R.id.brs_list_button_on)
         val offButton: ImageView = itemView.findViewById(R.id.brs_list_button_off)
         val activeLine: ImageView = itemView.findViewById(R.id.brs_list_line_active)
         val inactiveLine: ImageView = itemView.findViewById(R.id.brs_list_line_not_active)
+        val container: View = itemView.findViewById(R.id.brs_item_container)
 
         init {
             offButton.setOnClickListener {
-                brsList.forEach { it.isActive = false }
-                brsList[adapterPosition].isActive = true
-                onItemClick(brsList[adapterPosition])
+                if (isAnimating) return@setOnClickListener
+
+                // Анимация переключения активности
+                container.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(100)
+                    .withEndAction {
+                        container.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start()
+
+                        brsList.forEach { it.isActive = false }
+                        brsList[adapterPosition].isActive = true
+                        onItemClick(brsList[adapterPosition])
+                    }
+                    .start()
             }
         }
     }
@@ -45,6 +64,12 @@ class SelectedBrsAdapter(
     override fun onBindViewHolder(holder: SelectedBrsViewHolder, position: Int) {
         val currentItem = brsList[position]
 
+        holder.itemView.alpha = 1f
+        holder.itemView.translationX = 0f
+        holder.itemView.translationY = 0f
+        holder.container.scaleX = 1f
+        holder.container.scaleY = 1f
+
         holder.brsText.text = currentItem.name
 
         if (currentItem.isActive) {
@@ -52,6 +77,12 @@ class SelectedBrsAdapter(
             holder.offButton.visibility = View.GONE
             holder.activeLine.visibility = View.VISIBLE
             holder.inactiveLine.visibility = View.GONE
+
+            holder.container.animate()
+                .scaleX(1.02f)
+                .scaleY(1.02f)
+                .setDuration(200)
+                .start()
         } else {
             holder.onButton.visibility = View.GONE
             holder.offButton.visibility = View.VISIBLE
@@ -90,7 +121,16 @@ class SelectedBrsAdapter(
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val brsToDelete = brsList[position]
-                onDeleteClick(brsToDelete)
+
+                // Анимация удаления с эффектом "исчезновения"
+                viewHolder.itemView.animate()
+                    .alpha(0f)
+                    .translationX(-viewHolder.itemView.width.toFloat())
+                    .setDuration(300)
+                    .withEndAction {
+                        onDeleteClick(brsToDelete)
+                    }
+                    .start()
             }
 
             override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
@@ -110,6 +150,11 @@ class SelectedBrsAdapter(
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Анимация прозрачности при свайпе
+                    viewHolder.itemView.alpha = 1 - Math.abs(dX) / viewHolder.itemView.width
+                }
+
                 val itemView = viewHolder.itemView
                 val itemHeight = itemView.bottom - itemView.top
                 val isCanceled = dX == 0f && !isCurrentlyActive
@@ -166,10 +211,7 @@ class SelectedBrsAdapter(
                 isFirstThresholdPassed = false
                 firstThreshold = 0f
                 originalDx = 0f
-            }
-
-            private fun clearCanvas(c: Canvas?) {
-                c?.drawColor(0, PorterDuff.Mode.CLEAR)
+                viewHolder.itemView.alpha = 1f
             }
         }
 
