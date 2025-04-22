@@ -10,4 +10,5 @@
     <color name="background_dark">#16181C</color>
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B8B7B7</color>
+    <color name="hint_color">#777883</color>
 </resources>

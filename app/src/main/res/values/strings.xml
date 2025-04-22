@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">studentportal</string>
+    <string name="app_name">StudSked</string>
     <string name="_2024">Ноябрь 2024</string>
     <string name="login_hint">Логин</string>
     <string name="password_hint">Пароль</string>

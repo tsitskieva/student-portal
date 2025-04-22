@@ -18,4 +18,12 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="CustomSpinnerTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">@drawable/profile_item_background</item>
+        <item name="android:popupBackground">@drawable/profile_item_background</item>
+        <item name="android:dropDownSelector">?attr/selectableItemBackground</item>
+    </style>
+
+
+
 </resources>

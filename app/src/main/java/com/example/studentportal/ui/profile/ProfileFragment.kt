@@ -79,6 +79,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         view.findViewById<ConstraintLayout>(R.id.brs_container).setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_brsSettings)
         }
+
+        view.findViewById<ConstraintLayout>(R.id.errors_container).setOnClickListener {
+            findNavController().navigate(R.id.action_profile_to_reportProblem)
+        }
     }
 
     @SuppressLint("UseKtx")

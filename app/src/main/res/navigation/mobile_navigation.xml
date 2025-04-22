@@ -132,6 +132,16 @@
         <action
             android:id="@+id/action_profile_to_groupsSettings"
             app:destination="@id/groupsSettingsFragment"/>
+        <action
+            android:id="@+id/action_profile_to_reportProblem"
+            app:destination="@id/reportProblemFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportProblemFragment"
+        android:name="com.example.studentportal.ui.profile.ReportProblemFragment"
+        android:label="Сообщить о проблеме">
+
     </fragment>
 
     <fragment
