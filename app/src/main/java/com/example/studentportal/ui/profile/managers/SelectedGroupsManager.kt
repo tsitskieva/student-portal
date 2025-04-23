@@ -66,7 +66,7 @@ object SelectedGroupsManager {
             .apply()
     }
 
-    private fun getActiveGroup(context: Context): Pair<String, String>? {
+    fun getActiveGroup(context: Context): Pair<String, String>? {
         val value = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(ACTIVE_GROUP_KEY, null)
         return value?.split("|")?.let {

@@ -3,6 +3,8 @@ package com.example.studentportal.ui.profile
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +13,8 @@ import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -20,6 +24,9 @@ import com.example.studentportal.ui.brs.SharedViewModel
 import com.example.studentportal.ui.profile.managers.SelectedBrsManager
 import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.utils.InputFilterMinMax
+import com.example.studentportal.ui.utils.NotificationService
+import android.Manifest
+import com.example.studentportal.ui.utils.NotificationsViewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -32,11 +39,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var numberOfBrs: TextView
     private lateinit var hoursEditText: EditText
     private lateinit var minutesEditText: EditText
+    private lateinit var notificationService: NotificationService
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var compactViewSwitch: Switch
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var switchIndicatorBrs: Switch
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private val notificationsViewModel: NotificationsViewModel by activityViewModels()
+    private lateinit var beforeFirstSwitch: Switch
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,6 +61,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         setupCompactViewSwitch()
         setupEmptyLessonsSwitch()
         setupIndicatorBrsSwitch()
+        setupBeforeFirstSwitch()
+        notificationService = NotificationService(requireContext())
+        requestNotificationPermission()
     }
 
     private fun initializeViews(view: View) {
@@ -62,6 +76,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         hoursEditText = view.findViewById(R.id.hours_before_notification_lesson)
         minutesEditText = view.findViewById(R.id.minutes_before_notification_lesson)
         switchIndicatorBrs = view.findViewById(R.id.switch_indicator_brs)
+        beforeFirstSwitch = view.findViewById(R.id.switch_notifications_lesson_before_first)
     }
 
     private fun setupSharedPreferences() {
@@ -69,6 +84,33 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             "AppSettings",
             Context.MODE_PRIVATE
         )
+
+        if (!sharedPrefs.contains("notification_hours")) {
+            sharedPrefs.edit()
+                .putInt("notification_hours", 8)
+                .putInt("notification_minutes", 0)
+                .apply()
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_CODE
+                )
+            }
+        }
+    }
+
+    companion object {
+        private const val NOTIFICATION_PERMISSION_CODE = 100
     }
 
     private fun setupClickListeners(view: View) {
@@ -114,8 +156,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         hoursEditText.filters = arrayOf(InputFilterMinMax(0, 24))
         minutesEditText.filters = arrayOf(InputFilterMinMax(0, 60))
 
-        val savedHours = sharedPrefs.getInt("notification_hours", 0)
-        val savedMinutes = sharedPrefs.getInt("notification_minutes", 0)
+        // Устанавливаем значения по умолчанию (8 часов и 0 минут)
+        val savedHours = sharedPrefs.getInt("notification_hours", 8) // 8 по умолчанию
+        val savedMinutes = sharedPrefs.getInt("notification_minutes", 0) // 0 по умолчанию
+
         hoursEditText.setText(savedHours.toString())
         minutesEditText.setText(savedMinutes.toString())
 
@@ -210,13 +254,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @SuppressLint("UseKtx")
     private fun saveCurrentTimeValues() {
-        val hours = hoursEditText.text.toString().toIntOrNull() ?: 0
-        val minutes = minutesEditText.text.toString().toIntOrNull() ?: 0
+        val hours = hoursEditText.text.toString().toIntOrNull() ?: 8 // 8 по умолчанию
+        val minutes = minutesEditText.text.toString().toIntOrNull() ?: 0 // 0 по умолчанию
 
         sharedPrefs.edit()
             .putInt("notification_hours", hours)
             .putInt("notification_minutes", minutes)
             .apply()
+
+        NotificationService(requireContext()).scheduleNotifications()
     }
 
     @SuppressLint("UseKtx")
@@ -236,6 +282,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         emptyLessonsSwitch.setOnCheckedChangeListener { _, isChecked ->
             sharedPrefs.edit().putBoolean("show_empty_lessons", isChecked).apply()
+        }
+    }
+
+    private fun setupBeforeFirstSwitch() {
+        beforeFirstSwitch.isChecked = sharedPrefs.getBoolean("notify_only_before_first", false)
+
+        beforeFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("notify_only_before_first", isChecked).apply()
+            notificationService.scheduleNotifications()
         }
     }
 }

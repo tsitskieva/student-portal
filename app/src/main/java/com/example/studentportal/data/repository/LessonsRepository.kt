@@ -233,4 +233,18 @@ object LessonsRepository {
         Lesson("78", "Практика", "МУАМ", "1-я пара", "8:00-9:35", "-", "-", "-",
             "-", "-", Calendar.SATURDAY, "обе", "обе", "Группа 24"),
     )
+
+    fun getRelevantLessons(group: String, currentWeekType: String): List<Lesson> {
+        return lessons.filter { lesson ->
+            lesson.group == group &&
+                    (lesson.weekType == currentWeekType || lesson.weekType == "обе")
+        }
+    }
+
+    fun getTodaysLessons(group: String, currentWeekType: String): List<Lesson> {
+        val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        return getRelevantLessons(group, currentWeekType)
+            .filter { it.dayOfWeek == today }
+            .sortedBy { it.getStartTime() }
+    }
 }

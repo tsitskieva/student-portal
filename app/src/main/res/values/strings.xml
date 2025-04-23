@@ -39,4 +39,6 @@
     <string name="type_audience">Type + audience</string>
     <string name="subgroup">Number of subgroup</string>
     <string name="underlined_text"><u>Добавить группу</u></string>
+    <string name="notification_title">Напоминание о паре</string>
+    <string name="no_audience_specified">Аудитория не указана</string>
 </resources>

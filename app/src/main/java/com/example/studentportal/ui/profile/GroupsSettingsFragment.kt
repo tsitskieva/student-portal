@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,12 +21,14 @@ import com.example.studentportal.R
 import com.example.studentportal.data.model.Group
 import com.example.studentportal.ui.profile.adapter.SelectedGroupsAdapter
 import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
+import com.example.studentportal.ui.utils.NotificationsViewModel
 
 class GroupsSettingsFragment : Fragment() {
     private lateinit var selectedGroupsAdapter: SelectedGroupsAdapter
     private lateinit var selectedGroups: MutableList<Group>
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyStateContainer: ConstraintLayout
+    private val notificationsViewModel: NotificationsViewModel by activityViewModels()
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -83,6 +86,7 @@ class GroupsSettingsFragment : Fragment() {
         requireActivity().setResult(Activity.RESULT_OK)
         updateEmptyState()
         notifyActiveGroupChanged()
+        notificationsViewModel.notifySettingsChanged()
     }
 
     private fun handleGroupDeletion(groupToDelete: Group) {

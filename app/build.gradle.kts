@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -43,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
 }
 
@@ -63,6 +65,9 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom.v20250300))
 
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.0")

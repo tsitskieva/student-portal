@@ -109,6 +109,10 @@ class WeekManager(
                 " неделя"
     }
 
+    fun getCurrentWeekTypeSimple(): String {
+        return if (getWeekType().startsWith("Верхняя")) "верхняя" else "нижняя"
+    }
+
     fun setSelectedDayOfWeek(dayOfWeek: Int) {
         selectedDayOfWeek = dayOfWeek
         Log.d("WeekManager", "Selected day of week: $dayOfWeek")
