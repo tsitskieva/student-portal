@@ -1,5 +1,6 @@
 package com.example.studentportal.ui.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -14,6 +15,12 @@ import com.example.studentportal.R
 import com.example.studentportal.ui.utils.NotificationService
 import com.example.studentportal.ui.utils.NotificationsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.work.WorkManager
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.ExistingPeriodicWorkPolicy
+import java.util.concurrent.TimeUnit
+import androidx.preference.PreferenceManager
+import com.example.studentportal.ui.brs.BrsCheckWorker
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private val notificationsViewModel: NotificationsViewModel by viewModels()
 
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,6 +52,23 @@ class MainActivity : AppCompatActivity() {
             NotificationService(this).scheduleNotifications()
         }
 
+    }
+
+    fun scheduleBrsCheck() {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val intervalHours = sharedPrefs.getInt("brs_check_interval", 3).toLong()
+
+        val workRequest = PeriodicWorkRequestBuilder<BrsCheckWorker>(
+            intervalHours, TimeUnit.HOURS
+        )
+            .setInitialDelay(10, TimeUnit.MINUTES) // Добавьте начальную задержку
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "brsCheckWork",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
     }
 
     private fun setupNavigation() {

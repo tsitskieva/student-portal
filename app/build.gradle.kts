@@ -49,6 +49,18 @@ android {
 }
 
 dependencies {
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    // WorkManager
+    implementation (libs.androidx.work)
+
+    // Preference
+    implementation(libs.androidx.preference.ktx)
+
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
     implementation(libs.androidx.navigation.fragment.ktx)

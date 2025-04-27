@@ -26,6 +26,7 @@ import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.utils.InputFilterMinMax
 import com.example.studentportal.ui.utils.NotificationService
 import android.Manifest
+import com.example.studentportal.ui.activities.MainActivity
 import com.example.studentportal.ui.utils.NotificationsViewModel
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -46,7 +47,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var switchIndicatorBrs: Switch
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val notificationsViewModel: NotificationsViewModel by activityViewModels()
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var beforeFirstSwitch: Switch
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private lateinit var notificationsBrsSwitch: Switch
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,6 +68,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         setupBeforeFirstSwitch()
         notificationService = NotificationService(requireContext())
         requestNotificationPermission()
+        setupBrsNotificationsSwitch()
     }
 
     private fun initializeViews(view: View) {
@@ -77,8 +82,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         minutesEditText = view.findViewById(R.id.minutes_before_notification_lesson)
         switchIndicatorBrs = view.findViewById(R.id.switch_indicator_brs)
         beforeFirstSwitch = view.findViewById(R.id.switch_notifications_lesson_before_first)
+        notificationsBrsSwitch = view.findViewById(R.id.switch_notifications_brs)
     }
 
+    @SuppressLint("UseKtx")
     private fun setupSharedPreferences() {
         sharedPrefs = requireContext().getSharedPreferences(
             "AppSettings",
@@ -90,6 +97,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 .putInt("notification_hours", 8)
                 .putInt("notification_minutes", 0)
                 .apply()
+        }
+
+        val isBrsNotificationsEnabled = sharedPrefs.getBoolean("brs_notifications_enabled", true)
+        notificationsBrsSwitch.isChecked = isBrsNotificationsEnabled
+    }
+
+    @SuppressLint("UseKtx")
+    private fun setupBrsNotificationsSwitch() {
+        notificationsBrsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPrefs.edit().putBoolean("brs_notifications_enabled", isChecked).apply()
+            notificationsViewModel.notifySettingsChanged()
+
+            if (isChecked) {
+                (activity as? MainActivity)?.scheduleBrsCheck()
+            }
         }
     }
 
@@ -285,6 +307,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    @SuppressLint("UseKtx")
     private fun setupBeforeFirstSwitch() {
         beforeFirstSwitch.isChecked = sharedPrefs.getBoolean("notify_only_before_first", false)
 

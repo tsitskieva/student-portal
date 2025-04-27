@@ -9,20 +9,61 @@ import com.example.studentportal.data.model.Submodule
 import com.example.studentportal.network.BRSApiService
 import com.example.studentportal.network.RetrofitClient
 import com.example.studentportal.network.response.DisciplineDetailsResponse
+import com.example.studentportal.ui.brs.room.BrsScore
 import retrofit2.HttpException
 import com.example.studentportal.ui.profile.managers.SelectedBrsManager
+import androidx.room.Room
+import com.example.studentportal.ui.brs.room.AppDatabase
 
 class BRSRepository(private val context: Context) {
+
+    private val database = Room.databaseBuilder(
+        context.applicationContext,
+        AppDatabase::class.java, "app-database"
+    ).build()
+
     private val apiService: BRSApiService =
         RetrofitClient.instance.create(BRSApiService::class.java)
     private val cache = mutableMapOf<Int, List<Discipline>>()
     private var cachedSemesters: List<Semester> = emptyList()
     private val semesterValidityCache = mutableMapOf<Int, Boolean>()
 
-    private fun getActiveToken(): String {
+    internal fun getActiveToken(): String {
         return SelectedBrsManager.getSelectedBrs(context)
             .find { it.isActive }
             ?.code ?: throw Exception("No active BRS selected")
+    }
+
+    suspend fun checkForScoreChanges(semesterId: Int): List<Discipline> {
+        val dao = database.brsScoreDao()
+        val currentDisciplines = getDisciplines(semesterId)
+        val changedDisciplines = mutableListOf<Discipline>()
+
+        currentDisciplines.forEach { discipline ->
+            val savedScore = dao.getById(discipline.id)
+            if (savedScore == null) {
+                dao.insert(BrsScore(
+                    discipline.id,
+                    discipline.name,
+                    discipline.score,
+                    discipline.maxScore,
+                    System.currentTimeMillis()
+                ))
+            } else if (savedScore.currentScore != discipline.score ||
+                savedScore.maxScore != discipline.maxScore) {
+                changedDisciplines.add(discipline)
+                dao.insert(
+                    BrsScore(
+                    discipline.id,
+                    discipline.name,
+                    discipline.score,
+                    discipline.maxScore,
+                    System.currentTimeMillis()
+                )
+                )
+            }
+        }
+        return changedDisciplines
     }
 
     suspend fun getSemesters(token: String): List<Semester> {
