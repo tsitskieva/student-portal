@@ -11,8 +11,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +23,7 @@ import com.example.studentportal.data.repository.LessonsRepository
 import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
 import com.example.studentportal.ui.schedule.adapter.LessonsAdapter
 import com.example.studentportal.ui.utils.WeekManager
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class ScheduleFragment : Fragment() {
@@ -101,25 +104,35 @@ class ScheduleFragment : Fragment() {
         updateData()
 
         parentFragmentManager.setFragmentResultListener("active_group_changed", viewLifecycleOwner) { _, _ ->
-            updateData()
+            updateData(forceRefresh = true)
         }
     }
 
-    private fun updateData() {
+    private fun updateData(forceRefresh: Boolean = false) {
         val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
 
         if (activeGroup == null) {
-            // Нет активной группы - показываем состояние "Добавить группу"
             showNoGroupState()
             return
-        } else {
-            // Есть активная группа - скрываем контейнер "Добавить группу"
-            noChosenGroupContainer.visibility = View.GONE
-            lessonsList.visibility = View.VISIBLE
         }
 
-        updateDotsUnderDays()
-        updateLessonsForSelectedDay()
+        noChosenGroupContainer.visibility = View.GONE
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                LessonsRepository.loadLessons(requireContext(), activeGroup.group, forceRefresh)
+                updateDotsUnderDays()
+                updateLessonsForSelectedDay()
+            } catch (e: Exception) {
+                Log.e("ScheduleFragment", "Ошибка загрузки расписания", e)
+                Toast.makeText(
+                    requireContext(),
+                    "Не удалось загрузить расписание: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                updateContainersVisibility(true)
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -131,17 +144,14 @@ class ScheduleFragment : Fragment() {
         lessonsAdapter.lessons = lessons
         lessonsAdapter.notifyDataSetChanged()
 
-        // Обновляем состояние видимости контейнеров
         updateContainersVisibility(lessons.isEmpty())
     }
 
     private fun updateContainersVisibility(isEmpty: Boolean) {
         if (isEmpty) {
-            // Если пар нет - показываем контейнер "Нет пар"
             noLessonGroupContainer.visibility = View.VISIBLE
             lessonsList.visibility = View.GONE
         } else {
-            // Если пары есть - показываем список
             noLessonGroupContainer.visibility = View.GONE
             lessonsList.visibility = View.VISIBLE
         }
@@ -154,33 +164,31 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun getLessonsForDay(dayOfWeek: Int, weekType: String): List<Lesson> {
-
         val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
             ?: return emptyList()
 
-        val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
-        val realLessons = LessonsRepository.lessons.filter {
+        val normalizedWeekType = weekType.trim().lowercase().replace(" неделя", "")
+        val allLessons = LessonsRepository.getCachedLessons(requireContext(), activeGroup.group)
+
+        val realLessons = allLessons.filter {
             it.dayOfWeek == dayOfWeek &&
-                    (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе") &&
-                    it.group == activeGroup.group
+                    (
+                            it.weekType.trim().lowercase() == normalizedWeekType ||
+                                    it.weekType.equals("обе", ignoreCase = true)
+                            ) &&
+                it.group == activeGroup.group
         }
 
-        // Если нет реальных пар - возвращаем пустой список
         if (realLessons.isEmpty()) return emptyList()
 
         val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
         val showEmptyLessons = sharedPrefs.getBoolean("show_empty_lessons", false)
 
-        // Если не показываем пустые пары - возвращаем только реальные
         if (!showEmptyLessons) return realLessons
 
-        // Получаем номера реальных пар
         val realLessonNumbers = realLessons.map { it.number }.toSet()
-
-        // Все возможные номера пар
         val allLessonNumbers = listOf("1-я пара", "2-я пара", "3-я пара", "4-я пара", "5-я пара")
 
-        // Создаем список всех пар (реальных и пустых)
         return allLessonNumbers.map { number ->
             if (number in realLessonNumbers) {
                 realLessons.first { it.number == number }
@@ -190,20 +198,23 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    private fun getNumberOfLessonsForDay(dayOfMonth: Int, month: Int, year: Int): Int {
+    private fun getNumberOfLessonsForDay(dayOfWeek: Int, weekType: String): Int {
         val activeGroup = SelectedGroupsManager.getSelectedGroups(requireContext()).find { it.isActive }
             ?: return 0
 
-        val calendar = Calendar.getInstance().apply {
-            set(year, month, dayOfMonth)
-        }
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        val weekType = weekManager?.getCurrentWeekType() ?: "Верхняя неделя"
-        val normalizedWeekType = weekType.toLowerCase().replace(" неделя", "")
+        val normalizedWeekType = weekType
+            .trim()
+            .lowercase()
+            .replace(" неделя", "")
 
-        return LessonsRepository.lessons.count {
+        val allLessons = LessonsRepository.getCachedLessons(requireContext(), activeGroup.group)
+
+        return allLessons.count {
             it.dayOfWeek == dayOfWeek &&
-                    (it.weekType.toLowerCase() == normalizedWeekType || it.weekType == "обе") &&
+                    (
+                            it.weekType.trim().lowercase() == normalizedWeekType ||
+                                    it.weekType.equals("обе", ignoreCase = true)
+                            ) &&
                     !it.isEmptyLesson &&
                     it.group == activeGroup.group
         }
@@ -211,10 +222,8 @@ class ScheduleFragment : Fragment() {
 
     private fun updateDotsUnderDays() {
         val view = requireView()
-        val calendar = Calendar.getInstance()
-        val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH)
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        val weekDates = weekManager?.getCurrentWeekDates() ?: return
+        val currentWeekType = weekManager?.getCurrentWeekType() ?: "Верхняя неделя"
 
         val dotsContainers = listOf(
             view.findViewById<LinearLayout>(R.id.dotsContainer1),
@@ -228,11 +237,11 @@ class ScheduleFragment : Fragment() {
 
         dotsContainers.forEach { it.removeAllViews() }
 
-        for (i in 0 until 7) {
-            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-            val numberOfLessons = getNumberOfLessonsForDay(dayOfMonth, currentMonth, currentYear)
+        weekDates.forEachIndexed { index, date ->
+            val dayOfWeek = date.get(Calendar.DAY_OF_WEEK)
+            val numberOfLessons = getNumberOfLessonsForDay(dayOfWeek, currentWeekType)
 
-            for (j in 0 until numberOfLessons) {
+            repeat(numberOfLessons) {
                 val dotView = ImageView(requireContext()).apply {
                     setImageResource(R.drawable.ic_dot)
                     layoutParams = LinearLayout.LayoutParams(
@@ -242,10 +251,8 @@ class ScheduleFragment : Fragment() {
                     val margin = resources.getDimensionPixelSize(R.dimen.dot_margin)
                     (layoutParams as LinearLayout.LayoutParams).setMargins(margin, 0, margin, 0)
                 }
-                dotsContainers[i].addView(dotView)
+                dotsContainers[index].addView(dotView)
             }
-
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
     }
 
@@ -253,15 +260,18 @@ class ScheduleFragment : Fragment() {
         super.onResume()
         val sharedPrefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
 
-        // Проверяем изменения компактного вида
         val newCompactViewSetting = sharedPrefs.getBoolean("compact_view_enabled", false)
         if (newCompactViewSetting != isCompactView) {
             isCompactView = newCompactViewSetting
-            lessonsAdapter = LessonsAdapter(lessonsAdapter.lessons, requireContext(), findNavController(), isCompactView)
+            lessonsAdapter = LessonsAdapter(
+                lessonsAdapter.lessons,
+                requireContext(),
+                findNavController(),
+                isCompactView
+            )
             lessonsList.adapter = lessonsAdapter
         }
 
-        // Проверяем изменения отображения пустых пар
         updateData()
     }
 }

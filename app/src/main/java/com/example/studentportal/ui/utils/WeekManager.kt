@@ -101,12 +101,11 @@ class WeekManager(
         val diffInMillis = calendar.timeInMillis - startDate.timeInMillis
         val diffInWeeks = (diffInMillis / (1000 * 60 * 60 * 24 * 7)).toInt()
 
-        return if (diffInWeeks % 2 == 0) "Нижняя неделя" else "Верхняя" +
-                "" +
-                "" +
-                "" +
-                "" +
-                " неделя"
+        return if (diffInWeeks % 2 == 0) {
+            "Нижняя неделя"
+        } else {
+            "Верхняя неделя"
+        }
     }
 
     fun getCurrentWeekTypeSimple(): String {
@@ -133,5 +132,20 @@ class WeekManager(
             Calendar.SUNDAY -> 6
             else -> dayOfWeek - 2
         }
+    }
+
+    fun getCurrentWeekDates(): List<Calendar> {
+        val tempCalendar = calendar.clone() as Calendar
+        tempCalendar.firstDayOfWeek = Calendar.MONDAY
+        tempCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+
+        val result = mutableListOf<Calendar>()
+
+        repeat(7) {
+            result.add(tempCalendar.clone() as Calendar)
+            tempCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        return result
     }
 }

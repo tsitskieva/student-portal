@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,6 +22,7 @@ import com.example.studentportal.data.model.News
 import com.example.studentportal.data.repository.NewsRepository
 import com.example.studentportal.ui.news.adapter.GalleryAdapter
 import com.example.studentportal.ui.news.adapter.LatestNewsAdapter
+import kotlinx.coroutines.launch
 
 class NewsDescFragment : Fragment(R.layout.news_description) {
 
@@ -28,7 +31,6 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация элементов
         val title: TextView = view.findViewById(R.id.news_name)
         val date: TextView = view.findViewById(R.id.news_date)
         val author: TextView = view.findViewById(R.id.news_author)
@@ -36,13 +38,11 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
         val galleryRecyclerView: RecyclerView = view.findViewById(R.id.gallery_recycler_view)
         val btnBack: ImageView = view.findViewById(R.id.back_button)
 
-        // Установка данных
         title.text = args.newsTitle
         date.text = args.newsDate
         author.text = args.newsAuthor
         view.findViewById<ImageView>(R.id.news_main_photo).setImageResource(args.newsMainPhoto)
 
-        // Категории
         args.newsCategories?.forEach { category ->
             val categoryView =
                 layoutInflater.inflate(R.layout.category_item, categoriesContainer, false)
@@ -54,26 +54,33 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             categoryView.layoutParams = layoutParams
         }
 
-        // Галерея
         galleryRecyclerView.adapter = GalleryAdapter(
             args.newsGalleryImages?.toList() ?: emptyList(),
             requireContext()
         )
 
-        // Рекомендуемые новости
-        setupRecyclerView(
-            view.findViewById(R.id.latest_news_recycler_view),
-            NewsRepository.newss.take(3)
-        )
+        loadLatestNews(view.findViewById(R.id.latest_news_recycler_view))
 
-//        setupRecyclerView(
-//            view.findViewById(R.id.latest_important_news_recycler_view),
-//            NewsRepository.newss.filter { it.isImportant }.take(3)
-//        )
-
-        // Кнопка назад
         btnBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun loadLatestNews(recyclerView: RecyclerView) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val latestNews = NewsRepository.getNews()
+                    .filter { it.id != args.newsId }
+                    .take(3)
+
+                setupRecyclerView(recyclerView, latestNews)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Не удалось загрузить похожие новости: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -97,6 +104,7 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             recyclerView
         ) { news ->
             val action = NewsDescFragmentDirections.actionNewsDescFragmentSelf(
+                newsId = news.id,
                 newsTitle = news.title,
                 newsDate = news.date,
                 newsAuthor = news.author,
@@ -124,6 +132,7 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             text to ""
         }
     }
+
     class HorizontalSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
             outRect: Rect,
@@ -131,7 +140,7 @@ class NewsDescFragment : Fragment(R.layout.news_description) {
             parent: RecyclerView,
             state: RecyclerView.State
         ) {
-            outRect.right = spacing // отступ справа для каждого элемента
+            outRect.right = spacing
         }
     }
 }

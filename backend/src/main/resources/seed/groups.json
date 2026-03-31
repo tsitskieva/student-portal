@@ -1,0 +1,146 @@
+[
+  {
+    "group": "Группа 11",
+    "direction": "24ВТ-27.03.03.01-о1",
+    "id": 1,
+    "isActive": false
+  },
+  {
+    "group": "Группа 12",
+    "direction": "24ВТ-27.03.05.01-o1",
+    "id": 2,
+    "isActive": false
+  },
+  {
+    "group": "Группа 14",
+    "direction": "24ВТ-12.03.01.01-o1",
+    "id": 3,
+    "isActive": false
+  },
+  {
+    "group": "Группа 16",
+    "direction": "24ВТ-09.03.03.01-o1",
+    "id": 4,
+    "isActive": false
+  },
+  {
+    "group": "Группа 17",
+    "direction": "24ВТ-09.03.03.01-o2",
+    "id": 5,
+    "isActive": false
+  },
+  {
+    "group": "Группа 19",
+    "direction": "24ВТ-09.03.03.01-o3",
+    "id": 6,
+    "isActive": false
+  },
+  {
+    "group": "Группа 21",
+    "direction": "23ВТ-27.03.03.01-o1",
+    "id": 7,
+    "isActive": false
+  },
+  {
+    "group": "Группа 22",
+    "direction": "23ВТ-27.03.05.01-o1",
+    "id": 8,
+    "isActive": false
+  },
+  {
+    "group": "Группа 24",
+    "direction": "23ВТ-12.03.01.01-o1",
+    "id": 9,
+    "isActive": false
+  },
+  {
+    "group": "Группа 26",
+    "direction": "23ВТ-09.03.03.01-o1",
+    "id": 10,
+    "isActive": false
+  },
+  {
+    "group": "Группа 27",
+    "direction": "23ВТ-09.03.03.01-o2",
+    "id": 11,
+    "isActive": false
+  },
+  {
+    "group": "Группа 29",
+    "direction": "23ВТ-09.03.03.01-o3",
+    "id": 12,
+    "isActive": false
+  },
+  {
+    "group": "Группа 31",
+    "direction": "22ВТ-27.03.03.01-o1",
+    "id": 13,
+    "isActive": false
+  },
+  {
+    "group": "Группа 32",
+    "direction": "22ВТ-27.03.05.01-o1",
+    "id": 14,
+    "isActive": false
+  },
+  {
+    "group": "Группа 34",
+    "direction": "22ВТ-12.03.01.01-o1",
+    "id": 15,
+    "isActive": false
+  },
+  {
+    "group": "Группа 36",
+    "direction": "22ВТ-09.03.03.01-o1",
+    "id": 16,
+    "isActive": false
+  },
+  {
+    "group": "Группа 37",
+    "direction": "22ВТ-09.03.03.01-o2",
+    "id": 17,
+    "isActive": false
+  },
+  {
+    "group": "Группа 39",
+    "direction": "22ВТ-09.03.03.01-o3",
+    "id": 18,
+    "isActive": false
+  },
+  {
+    "group": "Группа 41",
+    "direction": "21ВТ-27.03.03.01-o1",
+    "id": 19,
+    "isActive": false
+  },
+  {
+    "group": "Группа 42",
+    "direction": "21ВТ-27.03.05.01-o1",
+    "id": 20,
+    "isActive": false
+  },
+  {
+    "group": "Группа 44",
+    "direction": "21ВТ-12.03.01.01-o1",
+    "id": 21,
+    "isActive": false
+  },
+  {
+    "group": "Группа 46",
+    "direction": "21ВТ-09.03.03.01-o1",
+    "id": 22,
+    "isActive": false
+  },
+  {
+    "group": "Группа 47",
+    "direction": "21ВТ-09.03.03.01-o2",
+    "id": 23,
+    "isActive": false
+  },
+  {
+    "group": "Группа 49",
+    "direction": "21ВТ-09.03.03.01-o3",
+    "id": 24,
+    "isActive": false
+  }
+]

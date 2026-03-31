@@ -18,10 +18,11 @@ android {
     defaultConfig {
         applicationId = "com.example.studentportal"
         minSdk = 24
-        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "PORTAL_API_BASE_URL", "\"http://10.0.2.2:8080/\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,30 +36,29 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
-
-    // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    // WorkManager
-    implementation (libs.androidx.work)
-
-    // Preference
+    implementation(libs.androidx.work)
     implementation(libs.androidx.preference.ktx)
 
     implementation(libs.retrofit)
@@ -78,8 +78,6 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.0")

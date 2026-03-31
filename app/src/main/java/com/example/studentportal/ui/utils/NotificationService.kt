@@ -12,13 +12,16 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.studentportal.R
 import com.example.studentportal.data.repository.LessonsRepository
-import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
-import java.util.*
 import com.example.studentportal.ui.activities.MainActivity
+import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import java.util.Calendar
 
 class NotificationService(private val context: Context) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     companion object {
         const val CHANNEL_ID = "lessons_notifications"
@@ -68,45 +71,62 @@ class NotificationService(private val context: Context) {
     }
 
     fun scheduleNotifications() {
-        cancelAllNotifications()
+        try {
+            cancelAllNotifications()
 
-        val sharedPrefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
-        val isNotificationsEnabled = sharedPrefs.getBoolean("notifications_enabled", false)
-        if (!isNotificationsEnabled) return
+            val sharedPrefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+            val isNotificationsEnabled = sharedPrefs.getBoolean("notifications_enabled", false)
+            if (!isNotificationsEnabled) return
 
-        val hoursBefore = sharedPrefs.getInt("notification_hours", 8) // 8 по умолчанию
-        val minutesBefore = sharedPrefs.getInt("notification_minutes", 0) // 0 по умолчанию
-        if (hoursBefore == 0 && minutesBefore == 0) return
+            val hoursBefore = sharedPrefs.getInt("notification_hours", 8)
+            val minutesBefore = sharedPrefs.getInt("notification_minutes", 0)
+            if (hoursBefore == 0 && minutesBefore == 0) return
 
-        val notifyOnlyBeforeFirst = sharedPrefs.getBoolean("notify_only_before_first", false)
-        val selectedGroups = SelectedGroupsManager.getSelectedGroups(context)
-        val activeGroup = selectedGroups.find { it.isActive } ?: return
+            val notifyOnlyBeforeFirst = sharedPrefs.getBoolean("notify_only_before_first", false)
+            val selectedGroups = SelectedGroupsManager.getSelectedGroups(context)
+            val activeGroup = selectedGroups.find { it.isActive } ?: return
 
-        // Простое определение типа недели (можно заменить на вашу логику)
-        val calendar = Calendar.getInstance()
-        val weekType = if (calendar.get(Calendar.WEEK_OF_YEAR) % 2 == 0) "Нижняя неделя" else "Верхняя неделя"
-
-        val todayLessons = LessonsRepository.getTodaysLessons(activeGroup.group, weekType)
-
-        if (todayLessons.isEmpty()) {
-            Log.d("Notifications", "No lessons today for group ${activeGroup.group}")
-            return
-        }
-
-        if (notifyOnlyBeforeFirst) {
-            // Берем только первую пару дня
-            todayLessons.minByOrNull { it.getStartTime() }?.let { firstLesson ->
-                scheduleNotificationForLesson(firstLesson, hoursBefore, minutesBefore)
+            val calendar = Calendar.getInstance()
+            val weekType = if (calendar.get(Calendar.WEEK_OF_YEAR) % 2 == 0) {
+                "Нижняя неделя"
+            } else {
+                "Верхняя неделя"
             }
-        } else {
-            // Стандартный режим - все пары
-            todayLessons.forEach { lesson ->
-                scheduleNotificationForLesson(lesson, hoursBefore, minutesBefore)
+
+            try {
+                runBlocking(Dispatchers.IO) {
+                    LessonsRepository.loadLessons(context, activeGroup.group)
+                }
+            } catch (e: Exception) {
+                Log.e("NotificationService", "Backend недоступен, продолжаем с кэшем", e)
             }
+
+            val todayLessons = LessonsRepository.getTodaysLessons(context, activeGroup.group, weekType)
+
+            if (todayLessons.isEmpty()) {
+                Log.d("Notifications", "No lessons today for group ${activeGroup.group}")
+                return
+            }
+
+            if (notifyOnlyBeforeFirst) {
+                todayLessons.minByOrNull { it.getStartTime() }?.let { firstLesson ->
+                    scheduleNotificationForLesson(firstLesson, hoursBefore, minutesBefore)
+                }
+            } else {
+                todayLessons.forEach { lesson ->
+                    scheduleNotificationForLesson(lesson, hoursBefore, minutesBefore)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("NotificationService", "Ошибка при планировании уведомлений", e)
         }
     }
 
-    private fun scheduleNotificationForLesson(lesson: Lesson, hoursBefore: Int, minutesBefore: Int) {
+    private fun scheduleNotificationForLesson(
+        lesson: Lesson,
+        hoursBefore: Int,
+        minutesBefore: Int
+    ) {
         val notificationTime = getNotificationTime(lesson.time, hoursBefore, minutesBefore)
         if (notificationTime.timeInMillis <= System.currentTimeMillis()) return
 
@@ -142,18 +162,20 @@ class NotificationService(private val context: Context) {
         }
     }
 
-    private fun getNotificationTime(lessonTime: String, hoursBefore: Int, minutesBefore: Int): Calendar {
+    private fun getNotificationTime(
+        lessonTime: String,
+        hoursBefore: Int,
+        minutesBefore: Int
+    ): Calendar {
         val calendar = Calendar.getInstance()
         val startTimeStr = lessonTime.split("-")[0].trim()
         val (hour, minute) = startTimeStr.split(":").map { it.toInt() }
 
-        // Устанавливаем время начала пары
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
-        // Вычитаем время для уведомления
         calendar.add(Calendar.HOUR, -hoursBefore)
         calendar.add(Calendar.MINUTE, -minutesBefore)
 
@@ -162,8 +184,9 @@ class NotificationService(private val context: Context) {
 
     fun cancelAllNotifications() {
         val selectedGroups = SelectedGroupsManager.getSelectedGroups(context)
+
         selectedGroups.forEach { group ->
-            LessonsRepository.getRelevantLessons(group.group, "").forEach { lesson ->
+            LessonsRepository.getCachedLessons(context, group.group).forEach { lesson ->
                 val intent = Intent(context, NotificationReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
@@ -176,13 +199,18 @@ class NotificationService(private val context: Context) {
         }
     }
 
-    fun showNotification(title: String, message: String, notificationId: Int, pendingIntent: PendingIntent? = null) {
+    fun showNotification(
+        title: String,
+        message: String,
+        notificationId: Int,
+        pendingIntent: PendingIntent? = null
+    ) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("OPEN_SCHEDULE", true)
         }
 
-        val pendingIntent = PendingIntent.getActivity(
+        val defaultPendingIntent = PendingIntent.getActivity(
             context,
             0,
             intent,
@@ -193,11 +221,13 @@ class NotificationService(private val context: Context) {
             .setSmallIcon(R.drawable.ic_schedule)
             .setContentTitle(title)
             .setContentText(message)
-            .setStyle(NotificationCompat.BigTextStyle()
-                .bigText(message)
-                .setBigContentTitle(title))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(message)
+                    .setBigContentTitle(title)
+            )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(pendingIntent ?: defaultPendingIntent)
             .setAutoCancel(true)
             .build()
 

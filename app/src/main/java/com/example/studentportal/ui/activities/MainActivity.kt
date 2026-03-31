@@ -1,6 +1,7 @@
 package com.example.studentportal.ui.activities
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -38,7 +39,11 @@ class MainActivity : AppCompatActivity() {
             navView.selectedItemId = R.id.nav_schedule
         }
 
-        NotificationService(this).scheduleNotifications()
+        try {
+            NotificationService(this).scheduleNotifications()
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Не удалось запланировать уведомления", e)
+        }
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -49,7 +54,11 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
 
         notificationsViewModel.settingsChanged.observe(this) {
-            NotificationService(this).scheduleNotifications()
+            try {
+                NotificationService(this).scheduleNotifications()
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Не удалось обновить уведомления", e)
+            }
         }
 
     }

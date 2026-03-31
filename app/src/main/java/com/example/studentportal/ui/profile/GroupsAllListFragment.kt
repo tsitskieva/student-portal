@@ -11,10 +11,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,11 +23,12 @@ import com.example.studentportal.data.model.Group
 import com.example.studentportal.data.repository.GroupsRepository
 import com.example.studentportal.ui.profile.adapter.GroupsAllAdapter
 import com.example.studentportal.ui.profile.managers.SelectedGroupsManager
+import kotlinx.coroutines.launch
 
 class GroupsAllListFragment : Fragment() {
 
     private lateinit var adapter: GroupsAllAdapter
-    private lateinit var allGroups: List<Group>
+    private var allGroups: List<Group> = emptyList()
     private lateinit var selectedGroups: MutableList<Group>
 
     override fun onCreateView(
@@ -55,6 +56,7 @@ class GroupsAllListFragment : Fragment() {
         setupBackButton(view)
         setupRecyclerView(view)
         setupSearch(view)
+        loadGroups()
     }
 
     override fun onResume() {
@@ -81,17 +83,12 @@ class GroupsAllListFragment : Fragment() {
     }
 
     private fun setupRecyclerView(view: View) {
-        allGroups = GroupsRepository.groupsList
         selectedGroups = SelectedGroupsManager.getSelectedGroups(requireContext()).toMutableList()
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.list_of_all_groups)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = GroupsAllAdapter(
-            allGroups.filter { group ->
-                !selectedGroups.any { it.direction == group.direction && it.group == group.group }
-            }
-        ) { group ->
+        adapter = GroupsAllAdapter(emptyList()) { group ->
             if (selectedGroups.any { it.direction == group.direction && it.group == group.group }) {
                 Toast.makeText(requireContext(), "Эта группа уже добавлена", Toast.LENGTH_SHORT).show()
             } else {
@@ -108,6 +105,21 @@ class GroupsAllListFragment : Fragment() {
             }
         }
         recyclerView.adapter = adapter
+    }
+
+    private fun loadGroups() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                allGroups = GroupsRepository.getGroups()
+                filterGroups("")
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Не удалось загрузить список групп: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun setupSearch(view: View) {
@@ -129,15 +141,16 @@ class GroupsAllListFragment : Fragment() {
         } else {
             allGroups.filter {
                 it.group.contains(query, ignoreCase = true) &&
-                        !selectedGroups.any { selected ->
-                            selected.direction == it.direction && selected.group == it.group
-                        }
+                    !selectedGroups.any { selected ->
+                        selected.direction == it.direction && selected.group == it.group
+                    }
             }
         }
 
-        adapter.updateList(filteredList)
+        if (::adapter.isInitialized) {
+            adapter.updateList(filteredList)
+        }
 
-        // Показываем/скрываем состояние "Ничего не найдено"
         val nothingFoundContainer = view?.findViewById<View>(R.id.nothing_found_state_group_container)
         val recyclerView = view?.findViewById<RecyclerView>(R.id.list_of_all_groups)
 

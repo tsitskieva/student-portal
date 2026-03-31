@@ -7,16 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentportal.R
+import com.example.studentportal.data.model.News
 import com.example.studentportal.data.repository.NewsRepository
 import com.example.studentportal.ui.news.adapter.NewsAdapter
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
 
 class NewsFragment : Fragment() {
     private lateinit var btnBottomSheet: ImageView
@@ -25,6 +29,7 @@ class NewsFragment : Fragment() {
     private val selectedCategories = mutableListOf<String>()
     private lateinit var newsAdapter: NewsAdapter
     private var showOnlyImportant = false
+    private var allNews: List<News> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +45,7 @@ class NewsFragment : Fragment() {
         val newsRecyclerView = view.findViewById<RecyclerView>(R.id.news_list)
         newsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         newsAdapter = NewsAdapter(
-            newsList = NewsRepository.newss,
+            newsList = emptyList(),
             selectedCategories = selectedCategories,
             context = requireContext()
         )
@@ -51,17 +56,31 @@ class NewsFragment : Fragment() {
 
         setupClickListeners()
         setupBottomSheet()
+        loadNews()
+    }
 
+    private fun loadNews(forceRefresh: Boolean = false) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                allNews = NewsRepository.getNews(forceRefresh)
+                newsAdapter.updateNews(allNews, selectedCategories, showOnlyImportant)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Не удалось загрузить новости: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun setupClickListeners() {
-        // Обработка кнопки "важные новости"
         btnImportant.setOnClickListener {
             showOnlyImportant = !showOnlyImportant
             val iconRes =
                 if (showOnlyImportant) R.drawable.ic_important_news else R.drawable.ic_important
             btnImportant.setImageResource(iconRes)
-            newsAdapter.updateNews(NewsRepository.newss, selectedCategories, showOnlyImportant)
+            newsAdapter.updateNews(allNews, selectedCategories, showOnlyImportant)
         }
 
         btnImportant.setImageResource(
@@ -69,9 +88,9 @@ class NewsFragment : Fragment() {
             else R.drawable.ic_important
         )
 
-        // Обработка кликов на элементы списка
         newsAdapter.setOnItemClickListener { news ->
             val action = NewsFragmentDirections.actionNewsToDetails(
+                newsId = news.id,
                 newsTitle = news.title,
                 newsDate = news.date,
                 newsAuthor = news.author,
@@ -95,7 +114,6 @@ class NewsFragment : Fragment() {
         selectedCategoriesContainer =
             bottomSheetView.findViewById(R.id.selected_categories_container)
 
-        // Обработка выбора категорий
         listOf(
             R.id.filter_student,
             R.id.filter_applicant,
@@ -108,7 +126,7 @@ class NewsFragment : Fragment() {
                 val categoryView = it as TextView
                 val category = categoryView.text.toString()
                 toggleCategory(category)
-                newsAdapter.updateNews(NewsRepository.newss, selectedCategories, showOnlyImportant)
+                newsAdapter.updateNews(allNews, selectedCategories, showOnlyImportant)
             }
         }
 
@@ -139,11 +157,7 @@ class NewsFragment : Fragment() {
                 findViewById<ImageView>(R.id.selected_category_remove).setOnClickListener {
                     selectedCategories.remove(category)
                     updateSelectedCategoriesUI()
-                    newsAdapter.updateNews(
-                        NewsRepository.newss,
-                        selectedCategories,
-                        showOnlyImportant
-                    )
+                    newsAdapter.updateNews(allNews, selectedCategories, showOnlyImportant)
                 }
             }
             selectedCategoriesContainer.addView(view)

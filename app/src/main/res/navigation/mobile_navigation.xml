@@ -66,6 +66,9 @@
             android:id="@+id/action_newsDescFragment_self"
             app:destination="@id/newsDescFragment">
             <argument
+                android:name="newsId"
+                app:argType="string" />
+            <argument
                 android:name="newsTitle"
                 app:argType="string" />
             <argument
@@ -92,6 +95,9 @@
         </action>
 
         <argument
+            android:name="newsId"
+            app:argType="string" />
+        <argument
             android:name="newsTitle"
             app:argType="string" />
         <argument
@@ -115,9 +121,7 @@
         <argument
             android:name="newsGalleryImages"
             app:argType="string[]" />
-
     </fragment>
-
 
     <fragment
         android:id="@+id/nav_profile"
@@ -140,9 +144,7 @@
     <fragment
         android:id="@+id/reportProblemFragment"
         android:name="com.example.studentportal.ui.profile.ReportProblemFragment"
-        android:label="Сообщить о проблеме">
-
-    </fragment>
+        android:label="Сообщить о проблеме" />
 
     <fragment
         android:id="@+id/brsSettingsFragment"
@@ -191,7 +193,6 @@
         <action
             android:id="@+id/action_brs_to_brsSettings"
             app:destination="@id/brsSettingsFragment"/>
-
     </fragment>
 
     <fragment
@@ -203,6 +204,4 @@
             android:name="disciplineId"
             app:argType="integer" />
     </fragment>
-
-
 </navigation>
