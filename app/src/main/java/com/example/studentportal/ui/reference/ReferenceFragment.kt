@@ -154,28 +154,44 @@ class ReferenceFragment : Fragment() {
                 isCheckable = false
                 isClickable = true
                 setOnClickListener {
-                    askAssistant(topic)
+                    askAssistant(displayQuery = topic, actualQuery = buildTopicPrompt(topic))
                 }
             }
             topicsGroup.addView(chip)
         }
     }
 
-    private fun askAssistant(query: String) {
-        val trimmedQuery = query.trim()
-        if (trimmedQuery.isBlank()) {
+    private fun buildTopicPrompt(topic: String): String {
+        return when (topic.trim().lowercase()) {
+            "деканат" -> "Расскажи кратко и по делу про деканат: как связаться, где он находится и что важно знать студенту."
+            "ивтипт" -> "Расскажи кратко и по делу про ИВТиПТ: что это, где находится и как связаться."
+            "общежитие" -> "Расскажи кратко и по делу про общежития: что важно знать студенту, какие есть адреса и куда обращаться."
+            "приёмная комиссия", "приемная комиссия" -> "Расскажи кратко и по делу про приёмную комиссию: где она находится, как связаться и что важно знать."
+            "профсоюз" -> "Расскажи кратко и по делу про профсоюз: чем он занимается, как связаться и режим работы."
+            "социальная поддержка" -> "Расскажи кратко и по делу про социальную поддержку студентов: кто может рассчитывать и куда обращаться."
+            "стипендия", "стипендии" -> "Расскажи кратко и по делу про стипендии: какие бывают виды и что важно знать студенту."
+            "университет" -> "Расскажи кратко и по делу про университет в рамках доступной справочной информации."
+            else -> topic
+        }
+    }
+
+    private fun askAssistant(displayQuery: String, actualQuery: String = displayQuery) {
+        val trimmedDisplay = displayQuery.trim()
+        val trimmedActual = actualQuery.trim()
+
+        if (trimmedActual.isBlank()) {
             Toast.makeText(requireContext(), "Введите вопрос", Toast.LENGTH_SHORT).show()
             return
         }
 
-        appendUserMessage(trimmedQuery)
-        conversationHistory.add(ReferenceChatMessage(role = "user", text = trimmedQuery))
+        appendUserMessage(trimmedDisplay)
+        conversationHistory.add(ReferenceChatMessage(role = "user", text = trimmedDisplay))
         queryInput.setText("")
 
         viewLifecycleOwner.lifecycleScope.launch {
             setLoading(true)
             try {
-                val result = ReferenceRepository.ask(trimmedQuery, conversationHistory.takeLast(8))
+                val result = ReferenceRepository.ask(trimmedActual, conversationHistory.takeLast(8))
                 hideLoadingMessage()
                 appendAssistantMessage(result)
                 conversationHistory.add(
@@ -235,7 +251,7 @@ class ReferenceFragment : Fragment() {
         val bubble = createBubbleContainer(R.drawable.reference_message_bot_background)
 
         val headerView = TextView(requireContext()).apply {
-            text = if (result.isAiGenerated) "AI-помощник" else "Помощник"
+            text = "AI-помощник"
             setTextColor(0xFFC4B5FD.toInt())
             textSize = 12f
             setBackgroundResource(R.drawable.reference_category_background)

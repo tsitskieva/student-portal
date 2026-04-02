@@ -2,27 +2,27 @@ package com.example.studentportal.backend
 
 import com.example.studentportal.backend.model.ErrorResponse
 import com.example.studentportal.backend.model.ReferenceAskRequest
-import com.example.studentportal.backend.service.OpenAiUniversityAssistant
+import com.example.studentportal.backend.service.OllamaUniversityAssistant
 import com.example.studentportal.backend.storage.FilePortalRepository
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import kotlinx.serialization.json.Json
 
 fun main() {
     val repository = FilePortalRepository()
-    val assistant = OpenAiUniversityAssistant(repository)
+    val assistant = OllamaUniversityAssistant(repository)
 
     embeddedServer(Netty, host = "0.0.0.0", port = 8080) {
         configureSerialization()
@@ -44,7 +44,7 @@ private fun Application.configureSerialization() {
 
 private fun Application.configureRouting(
     repository: FilePortalRepository,
-    assistant: OpenAiUniversityAssistant
+    assistant: OllamaUniversityAssistant
 ) {
     routing {
         get("/health") {
@@ -123,6 +123,10 @@ private fun Application.configureRouting(
 
             get("/reference/topics") {
                 call.respond(repository.getReferenceTopics())
+            }
+
+            get("/reference/assistant/status") {
+                call.respond(assistant.status())
             }
 
             post("/reference/ask") {
