@@ -1,27 +1,32 @@
 package com.example.studentportal.backend
 
 import com.example.studentportal.backend.model.ErrorResponse
+import com.example.studentportal.backend.model.ReferenceAskRequest
+import com.example.studentportal.backend.service.OpenAiUniversityAssistant
 import com.example.studentportal.backend.storage.FilePortalRepository
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
+import io.ktor.server.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.response.respond
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 
 fun main() {
     val repository = FilePortalRepository()
+    val assistant = OpenAiUniversityAssistant(repository)
 
     embeddedServer(Netty, host = "0.0.0.0", port = 8080) {
         configureSerialization()
-        configureRouting(repository)
+        configureRouting(repository, assistant)
     }.start(wait = true)
 }
 
@@ -37,7 +42,10 @@ private fun Application.configureSerialization() {
     }
 }
 
-private fun Application.configureRouting(repository: FilePortalRepository) {
+private fun Application.configureRouting(
+    repository: FilePortalRepository,
+    assistant: OpenAiUniversityAssistant
+) {
     routing {
         get("/health") {
             call.respond(mapOf("status" to "ok"))
@@ -111,6 +119,21 @@ private fun Application.configureRouting(repository: FilePortalRepository) {
                 }
 
                 call.respond(lessons)
+            }
+
+            get("/reference/topics") {
+                call.respond(repository.getReferenceTopics())
+            }
+
+            post("/reference/ask") {
+                val request = runCatching { call.receive<ReferenceAskRequest>() }.getOrNull()
+                if (request == null || request.question.isBlank()) {
+                    call.respond(HttpStatusCode.BadRequest, ErrorResponse("Поле question обязательно"))
+                    return@post
+                }
+
+                val response = assistant.answer(request)
+                call.respond(response)
             }
         }
     }

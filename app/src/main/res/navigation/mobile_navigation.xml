@@ -49,13 +49,9 @@
 
     <fragment
         android:id="@+id/nav_news"
-        android:name="com.example.studentportal.ui.news.NewsFragment"
-        android:label="Новости"
-        tools:layout="@layout/fragment_news">
-        <action
-            android:id="@+id/action_news_to_details"
-            app:destination="@id/newsDescFragment" />
-    </fragment>
+        android:name="com.example.studentportal.ui.reference.ReferenceFragment"
+        android:label="Справочник"
+        tools:layout="@layout/fragment_reference" />
 
     <fragment
         android:id="@+id/newsDescFragment"
@@ -65,9 +61,6 @@
         <action
             android:id="@+id/action_newsDescFragment_self"
             app:destination="@id/newsDescFragment">
-            <argument
-                android:name="newsId"
-                app:argType="string" />
             <argument
                 android:name="newsTitle"
                 app:argType="string" />
@@ -95,9 +88,6 @@
         </action>
 
         <argument
-            android:name="newsId"
-            app:argType="string" />
-        <argument
             android:name="newsTitle"
             app:argType="string" />
         <argument
@@ -121,7 +111,9 @@
         <argument
             android:name="newsGalleryImages"
             app:argType="string[]" />
+
     </fragment>
+
 
     <fragment
         android:id="@+id/nav_profile"
@@ -144,7 +136,9 @@
     <fragment
         android:id="@+id/reportProblemFragment"
         android:name="com.example.studentportal.ui.profile.ReportProblemFragment"
-        android:label="Сообщить о проблеме" />
+        android:label="Сообщить о проблеме">
+
+    </fragment>
 
     <fragment
         android:id="@+id/brsSettingsFragment"
@@ -193,6 +187,7 @@
         <action
             android:id="@+id/action_brs_to_brsSettings"
             app:destination="@id/brsSettingsFragment"/>
+
     </fragment>
 
     <fragment
@@ -204,4 +199,6 @@
             android:name="disciplineId"
             app:argType="integer" />
     </fragment>
+
+
 </navigation>

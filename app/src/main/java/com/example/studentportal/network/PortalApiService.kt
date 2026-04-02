@@ -1,9 +1,13 @@
 package com.example.studentportal.network
 
+import com.example.studentportal.network.request.portal.ReferenceAskRequestDto
 import com.example.studentportal.network.response.portal.GroupDto
 import com.example.studentportal.network.response.portal.LessonDto
 import com.example.studentportal.network.response.portal.NewsDto
+import com.example.studentportal.network.response.portal.ReferenceAssistantResponseDto
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -29,4 +33,12 @@ interface PortalApiService {
         @Query("dayOfWeek") dayOfWeek: Int? = null,
         @Query("weekType") weekType: String? = null
     ): List<LessonDto>
+
+    @GET("api/v1/reference/topics")
+    suspend fun getReferenceTopics(): List<String>
+
+    @POST("api/v1/reference/ask")
+    suspend fun askReference(
+        @Body request: ReferenceAskRequestDto
+    ): ReferenceAssistantResponseDto
 }

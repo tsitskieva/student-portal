@@ -3,20 +3,20 @@
     <item
         android:id="@+id/nav_schedule"
         android:icon="@drawable/ic_schedule"
-        android:title="@string/shedule" />
+        android:title="Пары" />
 
     <item
         android:id="@+id/nav_news"
         android:icon="@drawable/ic_news"
-        android:title="@string/news" />
+        android:title="Справочник" />
 
     <item
         android:id="@+id/nav_brs"
         android:icon="@drawable/ic_brs"
-        android:title="@string/brs" />
+        android:title="БРС" />
 
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
-        android:title="@string/profile" />
+        android:title="Профиль" />
 </menu>
