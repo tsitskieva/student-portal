@@ -11,4 +11,17 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B8B7B7</color>
     <color name="hint_color">#777883</color>
+
+    <color name="reference_page_background">#16181C</color>
+    <color name="reference_subtitle">#B8B7B7</color>
+    <color name="reference_question_label">#B8B7B7</color>
+    <color name="reference_hint_text">#777883</color>
+    <color name="reference_primary_button">#8A6EFF</color>
+    <color name="reference_loading_button">#6E58AE</color>
+    <color name="reference_followup_button">#A38DFF</color>
+    <color name="reference_chip_text">#2C2F36</color>
+    <color name="reference_found_title">#1EAF5A</color>
+    <color name="reference_not_found_title">#CA5E6F</color>
+    <color name="reference_loading_title">#EDD77D</color>
+    <color name="reference_dark_container">#1F222B</color>
 </resources>

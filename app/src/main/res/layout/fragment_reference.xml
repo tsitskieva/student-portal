@@ -1,115 +1,348 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#16181C"
-    android:orientation="vertical"
-    android:paddingTop="24dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/lato_bold"
-        android:text="AI-помощник"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="16dp"
-        android:text="Спросите про институт, деканат, стипендии, общежитие, приёмную комиссию или профсоюз."
-        android:textColor="#B8BBC6"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/reference_topics_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="16dp"
-        android:text="Быстрые темы"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/reference_topics_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:visibility="gone"
-        app:chipSpacingHorizontal="8dp"
-        app:chipSpacingVertical="8dp"
-        app:singleLine="false" />
+    android:background="@color/reference_page_background">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/reference_chat_scroll"
+        android:id="@+id/reference_root_scroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="112dp"
         android:clipToPadding="false"
-        android:fillViewport="true"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="12dp">
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/reference_chat_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="4dp"
-            android:paddingBottom="8dp" />
+            android:paddingStart="16dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:id="@+id/reference_topics_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/reference_topics_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_medium"
+                    android:text="Быстрые темы"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <android.widget.GridLayout
+                    android:id="@+id/reference_topics_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:columnCount="2"
+                    android:rowCount="3"
+                    android:useDefaultMargins="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reference_history_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/reference_initial_question_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/reference_bottom_container_background"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:id="@+id/reference_initial_input_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="213dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/reference_input_field_background"
+                    android:gravity="top"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/reference_initial_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway"
+                        android:text="Ваш вопрос"
+                        android:textColor="#777883"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/reference_initial_question_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/raleway_medium"
+                        android:gravity="top|start"
+                        android:hint="Например: как связаться с деканатом?"
+                        android:imeOptions="actionDone"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:lineHeight="22sp"
+                        android:maxLines="8"
+                        android:padding="0dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="#777883"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/reference_initial_submit_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/reference_primary_button"
+                    android:fontFamily="@font/lato"
+                    android:lineHeight="21sp"
+                    android:text="Получить ответ"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_reference_topic_arrow"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="10dp"
+                    app:iconTint="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reference_follow_up_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/reference_bottom_container_background"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/reference_input_field_background"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
+
+                        <EditText
+                            android:id="@+id/reference_follow_up_input"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/raleway_medium"
+                            android:hint="Уточните вопрос"
+                            android:imeOptions="actionSend"
+                            android:inputType="textCapSentences"
+                            android:lineSpacingExtra="2sp"
+                            android:maxLines="3"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/reference_follow_up_send_button"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/reference_follow_up_button_background"
+                        android:contentDescription="@null"
+                        android:padding="13dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_reference_send" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/reference_new_question_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:drawableEnd="@drawable/ic_reference_cancel_action"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/lato"
+                    android:text="Задать новый вопрос"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reference_loading_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/reference_bottom_container_background"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/reference_loading_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/reference_result_loading_background"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/reference_loading_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway"
+                        android:text="Ищем ответ на вопрос"
+                        android:textColor="#EDD77D"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/reference_loading_question_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="Справка"
+                        android:textColor="@color/reference_question_label"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/reference_loading_bars_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="41dp"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="176dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/reference_loading_bar_track">
+
+                            <View
+                                android:id="@+id/reference_loading_bar_1"
+                                android:layout_width="108dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/reference_loading_bar_fill" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="220dp"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/reference_loading_bar_track">
+
+                            <View
+                                android:id="@+id/reference_loading_bar_2"
+                                android:layout_width="148dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/reference_loading_bar_fill" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="132dp"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/reference_loading_bar_track">
+
+                            <View
+                                android:id="@+id/reference_loading_bar_3"
+                                android:layout_width="90dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/reference_loading_bar_fill" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/reference_loading_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/reference_loading_button_background"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Думаю..."
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <ProgressBar
+                        android:id="@+id/reference_loading_progress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="10dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/white" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/reference_cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:drawableEnd="@drawable/ic_reference_cancel_action"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/lato"
+                    android:text="Отменить"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
+        android:id="@+id/reference_fixed_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1E2129"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="10dp">
+        android:background="@color/reference_page_background"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="60dp"
+        android:paddingEnd="16dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:boxBackgroundColor="#242730"
-            app:boxBackgroundMode="filled"
-            app:hintTextColor="#9AA0AE"
-            app:startIconDrawable="@android:drawable/ic_menu_search">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/reference_query_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Напишите вопрос..."
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#8C90A0" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/reference_send_button"
+        <TextView
+            android:id="@+id/reference_screen_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:backgroundTint="#7A5AF8"
-            android:text="Спросить"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF" />
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/lato_bold"
+            android:text="Справочник"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/reference_top_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="96dp"
+        android:background="@drawable/reference_top_scrim" />
+
+</FrameLayout>

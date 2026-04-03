@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
@@ -30,10 +31,8 @@ class LessonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Получаем аргументы
         lessonId = args.lessonId
 
-        // Инициализация элементов
         val title: TextView = view.findViewById(R.id.lesson_title)
         val typeOfTest: TextView = view.findViewById(R.id.test_type)
         val type: TextView = view.findViewById(R.id.lesson_type)
@@ -43,7 +42,6 @@ class LessonFragment : Fragment() {
         val commentInput: EditText = view.findViewById(R.id.commentInput)
         val btnBack: ImageView = view.findViewById(R.id.btnBack)
 
-        // Установка данных из аргументов
         title.text = args.lessonTitle
         typeOfTest.text = args.lessonTypeOfTest
         type.text = args.lessonType
@@ -51,16 +49,15 @@ class LessonFragment : Fragment() {
         building.text = args.lessonBuilding
         teacher.text = args.lessonTeacher
 
-        // Восстановление комментария
         val sharedPreferences = requireContext().getSharedPreferences("LessonPrefs", Context.MODE_PRIVATE)
         commentInput.setText(sharedPreferences.getString("comment_$lessonId", ""))
 
-        // Обработка кнопки назад
         btnBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
         setupTouchDelegate(btnBack)
+        setupCommentScrolling(commentInput)
     }
 
     override fun onPause() {
@@ -84,6 +81,19 @@ class LessonFragment : Fragment() {
             val extendSize = (20 * resources.displayMetrics.density).toInt()
             rect.inset(-extendSize, -extendSize)
             parent.touchDelegate = TouchDelegate(rect, btnBack)
+        }
+    }
+
+    private fun setupCommentScrolling(commentInput: EditText) {
+        commentInput.setOnTouchListener { v, event ->
+            if (v.canScrollVertically(1) || v.canScrollVertically(-1)) {
+                v.parent.requestDisallowInterceptTouchEvent(true)
+
+                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                    v.parent.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false
         }
     }
 }

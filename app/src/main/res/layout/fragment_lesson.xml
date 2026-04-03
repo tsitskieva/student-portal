@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#16181C"
-    android:orientation="vertical">
+    android:fillViewport="true"
+    android:clipToPadding="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#16181C"
-        android:orientation="vertical">
+        android:paddingBottom="24dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
@@ -38,7 +39,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/lato_bold"
                 android:text="Предмет"
                 android:textColor="#FFFFFF"
@@ -46,15 +46,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="HardcodedText,MissingConstraints" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lesson_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout3">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/name_of_lesson"
@@ -80,12 +80,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Title"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -93,7 +93,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView1"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -128,12 +127,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/test_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Type of test"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -141,7 +140,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView2"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -176,12 +174,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Type of lesson"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -189,7 +187,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView3"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -224,12 +221,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_audience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Number of audience"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -237,7 +234,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView4"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -281,12 +277,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_building"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Building"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -295,7 +291,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView5"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -330,12 +325,12 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/lesson_teacher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/raleway_medium"
+                    android:fontFeatureSettings="lnum"
                     android:text="Name of teacher"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
@@ -343,7 +338,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView6"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -379,15 +373,20 @@
                     tools:ignore="HardcodedText" />
 
                 <EditText
-                    android:fontFeatureSettings="lnum"
                     android:id="@+id/commentInput"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/shape_rounded"
+                    android:fontFeatureSettings="lnum"
+                    android:fontFamily="@font/raleway_medium"
                     android:gravity="top|start"
                     android:hint="Введите текст..."
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="6"
+                    android:overScrollMode="ifContentScrolls"
                     android:padding="12dp"
+                    android:scrollbars="vertical"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#777883"
                     android:textSize="16sp"
@@ -396,12 +395,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textView7"
                     tools:ignore="HardcodedText" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
